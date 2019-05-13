@@ -16,9 +16,7 @@
 title: imwithpanda
 email: ahoi@iwpnd.pw
 description: >- # this means to ignore newlines until "baseurl:"
-  Geographer turned Geospatial Scientist turned Data-Something with a strong emphasis on data analysis, 
-  data engineering and ETL development who is currently working on machine learning in natural language processing for 
-  named entity recognition. No idea how I got there, but I sure enjoy the ride.
+  Geographer turned Geospatial Scientist turned Data-Something.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: imwithpanda

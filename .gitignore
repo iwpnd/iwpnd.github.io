@@ -1,3 +1,11 @@
 _site
 .sass-cache
+<<<<<<< HEAD
 .jekyll-metadata
+=======
+.directory
+Thumbs.db
+_drafts
+.ruby-version
+Gemfile.lock
+>>>>>>> iwpnd-old

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Welcome to Jekyll!
 #
 # This config file is meant for settings that affect your whole blog, values
@@ -39,3 +40,76 @@ plugins:
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
+=======
+#
+###################################
+# Site wide configuration
+####################################
+#
+title: imwithpanda
+email: ahoi@iwpnd.pw
+description: geographer turned data-something
+url: https://iwpnd.pw
+keywords: ["blog", "imwithpanda", "python", "data analysis", "data science", "data engineering"]
+
+#
+###################################
+# Jekyll configuration
+####################################
+#
+timezone:          Europe/Berlin
+markdown:          kramdown
+highlighter:       rouge
+excerpt_separator: <!--more-->
+permalink:         /articles/:year-:month/:title
+
+kramdown:
+  auto_ids: true
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
+  enable_coderay: false
+
+#
+###################################
+# Site Owner configuration
+####################################
+#
+owner:
+  name: imwitpanda
+  avatar: img.png
+  job: "data analyst"
+  bio: "geographer turned data something"
+  email: "ahoi@iwpnd.pw"
+  disqus-shortname:
+  twitter: "imwithpanda"
+  facebook: #username
+  google:
+    plus: #username
+    analytics:
+    verify:
+    ad-client:
+    ad-slot:
+  bing-verify:
+  github: "iwpnd"
+  gitlab: #username
+  stackoverflow: #123456/username   from a "http://stackoverflow.com/users/123456/username" link
+  linkedin: #username
+  skype: #username
+  xing: #username
+  instagram: #username
+  lastfm: #username
+  tumblr: #username
+  pinterest: #username
+  foursquare: #username
+  steam: #username
+  dribbble: #username
+  youtube: #username
+  soundcloud: #username
+  weibo: #username
+  flickr: #username
+  500px: #username
+  codepen: #username
+  reddit: #username
+  telegram: #username
+>>>>>>> iwpnd-old

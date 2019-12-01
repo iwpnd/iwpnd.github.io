@@ -1,14 +1,23 @@
 - name: toponym
-  descr: "build grammatical cases of country names, citynames etcpp"
   image: pong.png
   github: https://github.com/iwpnd/toponym
 
+
+- name: toponym-api
+  image: pong.png
+  github: https://github.com/iwpnd/toponym-api
+
+
+- name: flash-geotext
+  image: pong.png
+  github: https://github.com/iwpnd/flash-geotext
+
+
 - name: wordsearch
-  descr: "search for words in input text (including start/end position in string) either by exact match or words that contain search term."
   image: pong.png
   github: https://github.com/iwpnd/wordsearch
 
+
 - name: shoptekt
-  descr: "get a list of surrounding super markets around a given adress or latlon from a wrapper around meinprospekt.de"
   image: pong.png
   github: https://github.com/iwpnd/shoptekt

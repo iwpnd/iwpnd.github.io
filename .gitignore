@@ -7,5 +7,6 @@ _site
 Thumbs.db
 _drafts
 .ruby-version
-Gemfile.lock
+Gemfile.loc
+.jekyll-cache/
 >>>>>>> iwpnd-old

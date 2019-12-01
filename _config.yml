@@ -32,9 +32,9 @@ kramdown:
 ####################################
 #
 owner:
-  name: imwitpanda
+  name: imwithpanda
   avatar: img.png
-  job: "data analyst"
+  job: "data engineer"
   bio: "geographer turned data something"
   email: "ahoi@iwpnd.pw"
   disqus-shortname:

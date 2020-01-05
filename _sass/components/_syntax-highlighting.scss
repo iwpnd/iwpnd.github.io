@@ -5,7 +5,7 @@
 
 pre, code {
   font-family: $font-family-monospace;
-  color: #525252;
+  color: #f8f8f2;
   font-size: 0.9em;
   background-color: #282a36;
   font-size: ($font-size-base - 3);
@@ -54,9 +54,31 @@ $dt-yellow: #f1fa8c;
  * Styles
  */
 
+
 .highlight {
   background: $dt-gray-dark;
   color: $dt-gray-light;
+  margin: 0;
+  pre {
+    position: relative;
+  }
+  pre code {
+    color: #525252;
+    &::before {
+      content: attr(data-lang);
+      position: absolute;
+      top: 0;
+      right: 0;
+      color: #ccc;
+      text-align: right;
+      text-transform: uppercase;
+      font-size: 0.85em;
+      padding: 5px 10px 0;
+      line-height: 20px;
+      height: 20px;
+      font-weight: 600;
+    }
+  }
 
   .hll,
   .s,

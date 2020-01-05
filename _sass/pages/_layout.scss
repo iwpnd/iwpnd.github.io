@@ -31,13 +31,13 @@
   }
   .author_name {
     display: block;
-    color: #000;
+    color: #F8F8F2;
     font-size: 1.75em;
     text-transform: lowercase;
   }
   .author_job {
     display: block;
-    color: $secondary;
+    color: #6272A4;
     font-size: 0.8em;
     font-weight: 700;
     text-transform: uppercase;
@@ -46,6 +46,7 @@
   .author_bio {
     font-size: 90%;
     display: block;
+    color: #50FA7B;
   }
   @include media-query($medium-screen) {
     text-align: right;

@@ -4,12 +4,9 @@ title: pre-commit to the rescue
 tags: [pre-commit, python, black, git hooks]
 categories: python, pre-commit
 date:   2020-01-10 13:37:00 +0200
-excerpt_separator: <!--more-->
 ---
 
 During a keynote on last years [PyCON Berlin](https://pycon.de) somebody mentioned that he was watching that guy on [twitch](https://www.twitch.tv/) code for an audience. While hesitent at first, I actually followed [@anthonywritescode](https://twitch.tv/anthonywritescode) / [@asottile](https://github.com/asottile) and checked him out the next weekend. While the amazement of watching other people, especially proficient people, code live and answer question in real time is a topic in itself,what I found especially interesting was what he was working on - something called [pre-commit](https://pre-commit.com/).
-
-<!--more-->
 
 Raise your hand if you have accidentally committed code that does not compile, or an invalid json without that nasty closing bracket.
 

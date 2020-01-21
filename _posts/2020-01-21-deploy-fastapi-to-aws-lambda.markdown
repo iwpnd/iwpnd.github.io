@@ -1,9 +1,10 @@
 ---
 layout: post
-title: How to continously deploy a fastAPI to AWS Lambda with AWS SAM
+title: How to continuously deploy a fastAPI to AWS Lambda with AWS SAM
 tags: [python, fastapi, aws, aws lambda, aws sam]
 categories: python fastapi aws
 date:   2020-01-21 13:37:00 +0200
+toc: true
 ---
 
 My last [article about fastAPI](https://iwpnd.pw/articles/2020-01/opinion-on-fastapi) was supposed to be an article about how to deploy a fastAPI on a budget, but instead turned out to be an opinion on fastAPI and I left it at that. Let's change that.
@@ -21,7 +22,7 @@ First we setup a role that the AWS Lambda will assume within our AWS account. Ro
 ### Setup an AWS S3 bucket
 For small applications that only use vanilla python without external libraries one could quickly copy and paste the code into the AWS Lambda console. Bigger applications that use third-party libraries however will either be uploaded as a zip file, or in our case we will provide the location of our deployment package as an AWS S3 bucket. If you have AWS CLI properly setup you can create a bucket with:
 
-```yaml
+```
 aws s3api create-bucket \
 --bucket my-travis-deployment-bucket \
 --region eu-west-1 \
@@ -36,7 +37,7 @@ First we will create a new policy. This time we have to be more specific because
 <details>
 <summary>
 
-```yaml  
+```json  
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -50,7 +51,7 @@ First we will create a new policy. This time we have to be more specific because
 ```
 </summary>
  
-```yaml  
+```json  
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -133,39 +134,39 @@ For the sake of this tutorial I created a [Github repository](https://github.com
 ### Application structure
 Inspired by the [fastapi-realworld-example-app](https://github.com/nsidnev/fastapi-realworld-example-app), I neatly separated the pydantic models, the configuration, the endpoints and the routers.
 
-```yaml
+```
 .
 ├── Dockerfile
 ├── LICENSE
 ├── README.md
 ├── example_app
-│   ├── __init__.py
-│   ├── api
-│   │   ├── __init__.py
-│   │   └── api_v1
-│   │       ├── __init__.py
-│   │       ├── api.py
-│   │       └── endpoints
-│   │           ├── __init__.py
-│   │           └── example.py
-│   ├── core
-│   │   ├── __init__.py
-│   │   ├── config.py
-│   │   └── models
-│   │       ├── input.py
-│   │       └── output.py
-│   └── main.py
+│   ├── __init__.py
+│   ├── api
+│   │   ├── __init__.py
+│   │   └── api_v1
+│   │       ├── __init__.py
+│   │       ├── api.py
+│   │       └── endpoints
+│   │           ├── __init__.py
+│   │           └── example.py
+│   ├── core
+│   │   ├── __init__.py
+│   │   ├── config.py
+│   │   └── models
+│   │       ├── input.py
+│   │       └── output.py
+│   └── main.py
 ├── requirements.txt
 ├── scripts
-│   └── example.ipynb
+│   └── example.ipynb
 ├── setup.py
 ├── template.yml
 ├── .travis.yml
 ├── .pre-commit-config.yaml
 ├── tests
-│   ├── __init__.py
-│   ├── test_example_endpoint.py
-│   └── test_ping.py
+│   ├── __init__.py
+│   ├── test_example_endpoint.py
+│   └── test_ping.py
 ```
 For simplicities sake we have exactly two endpoints. One is `/ping` in `main.py` and the other is `/api/v1/example` that takes two integer values and returns their product. If you want you can expand this functionality with your own pedantic models and additional routes.  
 I also already included a `.pre-commit-configuration.yaml` for you to start using [pre-commit](https://iwpnd.pw/articles/2020-01/pre-commit-to-the-rescue) right away. It comes with pre configured hook for [black](https://iwpnd.pw/articles/2020-01/black-python-code-formatter).  
@@ -173,7 +174,7 @@ I also already included a `.pre-commit-configuration.yaml` for you to start usin
 ### Test the application locally
 To test the example application locally we have a couple of options. One is by cloning the [repository](https://github.com/iwpnd/fastapi-aws-lambda-example) und starting it locally with uvicorn. The other is to build a docker image from the `Dockerfile` in the repository and expose the app from within a container.
 
-```yaml
+```
 git clone https://github.com/iwpnd/fastapi-aws-lambda-example
 cd fastapi-aws-lambda-example
 # create and activate a virtual environment
@@ -185,7 +186,7 @@ uvicorn example_app.main:app --host 0.0.0.0 --port 8080 --reload
 
 Or
 
-```yaml
+```
 docker build -t example_app_image .
 docker run -p 8080:8080 -name example-app-container example_app_image
 ```
@@ -293,10 +294,10 @@ Once setup, you can now deploy the [fastapi-aws-lambda-example application]([rep
 ### 1. Stage: Validate the SAM template
 First thing we do is to validate the SAM template to check if the yaml we provide is valid.
 
-```yaml
+```
 sam validate
 ```
-```yaml
+```
 2020-01-21 10:28:39 Found credentials in environment variables.
 /path/to/fastapi-aws-lambda-example/template.yml is a valid SAM Template
 ```
@@ -304,13 +305,13 @@ sam validate
 ### 2. Stage: Build the deployment package
 Next up, we build the deployment package. If your application depends on packages that have natively compiled programs you pass `--use-container` and SAM will attempt to build the application in a Docker container using based on [LambCI](https://github.com/lambci). Optionally you can see what's happening in the container if you also pass the `--debug` flag.
 
-```yaml
+```
 sam build --use-container --debug
 ```
 
 This will build the deployment package and store it in `.aws-sam/build` along with a new `template.yaml` that now also contains the values we `!Sub` 'ed or substituted like so `${AWS::AccountId}`, in the initial template.
 
-```yaml
+```
 Starting Build inside a container
 Building resource 'FastapiExampleLambda'
 
@@ -334,12 +335,12 @@ Running PythonPipBuilder:CopySource
 ### 3. Stage: Package the application
 Up next, packaging. As stated in the beginning, when an application in an AWS Lambda exceeds a certain size or has dependencies, we have to package the application and either upload it in the AWS console, or prepare an intermediate AWS S3 bucket and let AWS Lambda get the application package from there. AWS SAM requires you to do the latter, or better, does it for you if you provision a bucket and pass it with `--s3-bucket my-travis-deployment-bucket`.
 
-```yaml
+```
 sam package --s3-bucket my-travis-deployment-bucket --output-template-file out.yml --region eu-west-1
 ```
 Which returns:
 
-```yaml
+```
 2020-01-21 10:48:12 Found credentials in environment variables.
 Uploading to 2adfa5ddb62b541b7cf323cda43ee394  8523862 / 8523862.0  (100.00%)  
 Successfully packaged artifacts and wrote output template to file out.yml.
@@ -349,11 +350,11 @@ sam deploy --template-file /path/to/fastapi-aws-lambda-example/out.yml --stack-n
 Now the application is packaged and a final template has been created that will now be used to tell AWS Cloudformation where the package is.
 
 ### 4. Stage: Deploy the application
-```yaml
+```
 sam deploy --template-file out.yml --stack-name example-stack-name --region eu-west-1 --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM
 ```
 
-```yaml
+```
 Waiting for stack create/update to complete
 Successfully created/updated stack - example-stack-name
 ```
@@ -363,7 +364,7 @@ This last step will finally deploy the application `--stack-name` to a `--region
 If you now go to the [API Gateway Console](https://eu-west-1.console.aws.amazon.com/apigateway/main/apis?region=eu-west-1) you will see your API deployed to the `prod` stage at [https://xxxxxxxxxx.execute-api.eu-west-1.amazonaws.com/prod]().
 
 ## Continuous deployment with Travis
-Now for the last part, the continous deployment through Github and Travis. The idea is that any code commit that passes an automated testing phase is automatically released into the production environment, and is accessible by the user. This means that the stages we laid out above, will no longer be executed manually by you, but instead in a Travis CI pipeline. Aight, let'se go.
+Now for the last part, the continuous deployment through Github and Travis. The idea is that any code commit that passes an automated testing phase is automatically released into the production environment, and is accessible by the user. This means that the stages we laid out above, will no longer be executed manually by you, but instead in a Travis CI pipeline. Aight, let'se go.
 
 1. Go to [https://travis-ci.com/](https://travis-ci.com/) and sign up with your github account.
 2. Accept the Authorization of Travis CI and you’ll be redirected to GitHub.
@@ -414,6 +415,6 @@ From now on every time you commit changes to your repository `master` branch, it
 3. We learned about AWS API Gateway and AWS Lambda
 4. We learned how [Mangum](https://github.com/erm/mangum) works
 5. We learned about AWS SAM and how to deploy an application from your own machine
-6. We learned how to use Travis for continous deployment of said application instead of doing it manually
+6. We learned how to use Travis for continuous deployment of said application instead of doing it manually
 
 If you have any questions feel free to reach out to me in the [example repository](https://github.com/iwpnd/fastapi-aws-lambda-example) or via mail.

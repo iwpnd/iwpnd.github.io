@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Directory as asci tree representation
+title: Directory tree asci representation
 tags: [homebrew, documentation]
 categories: homebrew macos documentation
 date:   2020-01-14 13:37:00 +0200
@@ -9,19 +9,19 @@ I was looking for an easy way to build a tree-structure from an input dictionary
 
 Setup on macOS is as easy as:
 
-```yaml
+```
 brew install tree
 ```
 
 Now if you `cd` into a directory that you want to map into a visually representation in ascii, then you would just type
 
-```yaml
+```
 tree . >> output.txt
 ```
 
 which would return:
 
-```yaml
+```bash
 ├── Dockerfile
 ├── LICENSE
 ├── README.md

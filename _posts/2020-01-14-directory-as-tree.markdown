@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Save a directory tree asci representation to be used in documentations
+title: Directory tree asci representation
 tags: [homebrew, documentation]
 categories: homebrew macos documentation
 date:   2020-01-14 13:37:00 +0200

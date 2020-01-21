@@ -1,15 +1,15 @@
 
-name: test
-description: test
-avatar: https://raw.githubusercontent.com/FromEndWorld/LOFFER/master/images/logo.png
-favicon: https://raw.githubusercontent.com/FromEndWorld/LOFFER/master/images/favicon.png
+name: iwpnd
+description: "geographer turned data something"
+keywords: ["blog", "imwithpanda", "python", "data analysis", "data science", "data engineering"]
+
+avatar: https://raw.githubusercontent.com/iwpnd/iwpnd.github.io/master/img/img.png
+favicon: https://raw.githubusercontent.com/iwpnd/iwpnd.github.io/master/favicon.png
 
 navigation:
-  - name: /
+  - name: home
     url: /
-  - name: 关于
-    url: /about
-  - name: 归档
+  - name: archive
     url: /archive
 paginate: 4
 excerpt_separator: <!-- more -->

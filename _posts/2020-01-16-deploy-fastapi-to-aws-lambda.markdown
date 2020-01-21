@@ -16,7 +16,7 @@ So let's use this article to start over and learn how to setup a basic continuou
 Let's assume that you already have registered an [AWS account](https://aws.amazon.com/free), setup a user other than `root` and have installed and configured [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) properly. The latter is not requirement, as you do everything we do in the AWS console, yet it's not a bad idea to learn the AWS CLI anyways.
 
 ### Setup a new role for AWS Lambda to assume
-First we setup a role that the AWS Lambda will assume within our AWS account. Roles are AWSs way to enforce the [principle of least priviledge](https://en.wikipedia.org/wiki/Principle_of_least_privilege) when it comes to the resources an AWS Lambda can execute or have access to. Go to the [IAM console](https://console.aws.amazon.com/iam/), select *Roles* and *Create*. That'll take you into the *Role creation* screen where you will choose a *AWS service* as the trusted entity and select *Lambda* as the service that will use the role we're going to create. Press next and it'll take you to the *Permissions* tab. Here you can either create a permission policy from scratch or select one of the existing ones. Keep in mind that the permissions vary depending on the purpose of the Lambda function. We'll take an existing permission for now. Search for `lambda` and select the `AWSLambdaBasicExecutionRole` which only allows our Lambda to write logs to AWS Cloudwatch. Press next, give it a tag or don't and press *Review*. Now you're prompted to give it a name. Choose a meaningful name (e.g. LambdaApiRole) and continue to create the role, which takes you pack to *Roles* where you click your newly created role and mark down the Role ARN ([Amazon Resource Name](https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html)). 
+First we setup a role that the AWS Lambda will assume within our AWS account. Roles are AWSs way to enforce the [principle of least priviledge](https://en.wikipedia.org/wiki/Principle_of_least_privilege) when it comes to the resources an AWS Lambda can execute or have access to. Go to the [IAM console](https://console.aws.amazon.com/iam/), select *Roles* and *Create*. That'll take you into the *Role creation* screen where you will choose a *AWS service* as the trusted entity and select *Lambda* as the service that will use the role we're going to create. Press next and it'll take you to the *Permissions* tab. Here you can either create a permission policy from scratch or select one of the existing ones. Keep in mind that the permissions vary depending on the purpose of the Lambda function. We'll take an existing permission for now. Search for `lambda` and select the `AWSLambdaBasicExecutionRole` which only allows our Lambda to write logs to AWS Cloudwatch. Press next, give it a tag or don't and press *Review*. Now you're prompted to give it a name. Choose a meaningful name (e.g. fastapilambdarole) and continue to create the role, which takes you pack to *Roles* where you click your newly created role and mark down the Role ARN ([Amazon Resource Name](https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html)). 
 
 ### Setup an AWS S3 bucket
 For small applications that only use vanilla python without external libraries one could quickly copy and paste the code into the AWS Lambda console. Bigger applications that use third-party libraries however will either be uploaded as a zip file, or in our case we will provide the location of our deployment package as an AWS S3 bucket. If you have AWS CLI properly setup you can create a bucket with:
@@ -35,6 +35,7 @@ First we will create a new policy. This time we have to be more specific because
 
 <details>
 <summary>
+
 ```python  
 {
     "Version": "2012-10-17",
@@ -70,7 +71,7 @@ First we will create a new policy. This time we have to be more specific because
                 "iam:PassRole"
             ],
             "Resource": [
-                "arn:aws:iam::<your-account-id-here>:role/LambdaApiRole"
+                "arn:aws:iam::<your-account-id-here>:role/fastapilambdarole"
             ]
         },
         {
@@ -169,7 +170,7 @@ Inspired by the [fastapi-realworld-example-app](https://github.com/nsidnev/fasta
 For simplicities sake we have exactly two endpoints. One is `/ping` in `main.py` and the other is `/api/v1/example` that takes two integer values and returns their product. If you want you can expand this functionality with your own pedantic models and additional routes.  
 I also already included a `.pre-commit-configuration.yaml` for you to start using [pre-commit](https://iwpnd.pw/articles/2020-01/pre-commit-to-the-rescue) right away. It comes with pre configured hook for [black](https://iwpnd.pw/articles/2020-01/black-python-code-formatter).  
 
-### test it locally
+### Test the application locally
 To test the example application locally we have a couple of options. One is by cloning the [repository](https://github.com/iwpnd/fastapi-aws-lambda-example) und starting it locally with uvicorn. The other is to build a docker image from the `Dockerfile` in the repository and expose the app from within a container.
 
 ```bash
@@ -177,6 +178,7 @@ git clone https://github.com/iwpnd/fastapi-aws-lambda-example
 cd fastapi-aws-lambda-example
 # create and activate a virtual environment
 pip install -e .
+pip install uvicorn # or anything else that can handle ASGI
 pytest . -v
 uvicorn example_app.main:app --host 0.0.0.0 --port 8080 --reload
 ```
@@ -190,7 +192,7 @@ docker run -p 8080:8080 -name example-app-container example_app_image
 
 No matter what you choose you can now go to your browser and check the applications documentation via [http://localhost:8080/docs](http://localhost:8000/docs) and test the API through the Swagger UI right there.
 
-## Wrap it with Mangum
+## Wrap the application with Mangum
 In order for this application to run with AWS Lambda & AWS API Gateway, we have to wrap it with [Mangum](https://github.com/erm/mangum). Mangum works as an adapter for [ASGI applications](https://asgi.readthedocs.io/en/latest/introduction.html) like the ones you can create with fastapi, so that they can send and receive information from API Gateway to Lambda and vice versa.
 
 ```python
@@ -224,6 +226,7 @@ def pong():
 handler = Mangum(app, enable_lifespan=False)
 ```
 
+### The AWS Lambda handler
 The handler is necessary in AWS Lambda for it is the function that AWS Lambda can invoke when the services executes your code. It follows a simple syntax:
 
 ```python
@@ -242,11 +245,128 @@ def handler(event, context):
 ```
 
 You can import your own libraries, like `your_module` or `your_database` and you can create variables or database connections. Everything outside of the `handler` function will execute when the AWS Lambda is provisioned. After that you can use it within the `handler` that AWS Lambda will use on consecutive calls.   
-The `event` is what AWS Lambda uses to pass in event data to the `handler`. The `context` on the other hand provides information about the invocation, function, and execution environment (see [docs](https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html) for more details).  
+The `event` is what AWS Lambda uses to pass in event data to the `handler`. The `context` on the other hand provides information about the invocation, function, and execution environment (see [docs](https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html) for more details). 
+
+### Mangum as the handler for event and context
 A fastapi application does not have a handler, so that's what [Mangum](https://github.com/erm/mangum) is for. It wraps the `app`, therefor will receive `event` and `context` in a AWS Lambda execution environment and will pass those on to the `app` itself.  
 For this to work we have to setup AWS API Gateway proxy integration to pass the raw request to the AWS Lambda, and let the `app` decide on how to process the information and what to return. This is what allows this setup in the first place.
 
 ## Deploy with AWS SAM
+To deploy the AWS Lambda function we have now built, we will use the AWS Serverless Application Model ([AWS SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html), an open source framework to build serverless applications. As an extension to [AWS Cloudformation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html) it integrates nicely with all the other AWS services we need and lets us build our infrastructure from code - the `template.yml` in the [repository]([repository](https://github.com/iwpnd/fastapi-aws-lambda-example)).
+
+<details>
+<summary>
+
+```yaml
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+    fastAPI aws lambda example
+Resources:
+    FastapiExampleLambda:
+        Type: AWS::Serverless::Function
+        Properties:
+            Events:
+                ApiEvent:
+                    Properties:
+                        RestApiId:
+                            Ref: FastapiExampleGateway
+                        Path: /{proxy+}
+                        Method: ANY
+                    Type: Api
+            FunctionName: fastapi-lambda-example
+            CodeUri: ./
+            Handler: example_app.main.handler
+            Runtime: python3.7
+            Timeout: 300 # timeout of your lambda function
+            MemorySize: 128 # memory size of your lambda function
+            Description: fastAPI aws lambda example
+            # other options, see -> docs
+            Role: !Sub arn:aws:iam::${AWS::AccountId}:role/fastapilambdarole
+
+    FastapiExampleGateway:
+        Type: AWS::Serverless::Api
+        Properties:
+            StageName: prod
+            OpenApiVersion: '3.0.0'
+
+```
+
+</details>
+
+There are some things we have to unpack here. What we do is, we tell AWS Cloudformation to provision resources on our behalf and to deploy them in a stack. In the *Resources* section you see the Lambda function we want to build from the code in the *CodeUri* with the `handler` in *Handler*. We define the *Runtime* of the Lambda, as well as *MemorySize* and *Timeout*. It is important for you to attach the proper role in the *Role* section, that we have created earlier. In the *Events* section we implicitly tell AWS Cloudformation to provision an API Gateway with `{proxy+}` integration, because as you recall that's what makes this setup work in the first place.
+Check out the official [Template Anatomy](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-specification-template-anatomy.html) to get a better understanding of other options available.
+
+Once setup, you can now deploy the [fastapi-aws-lambda-example application]([repository](https://github.com/iwpnd/fastapi-aws-lambda-example)) from your local machine, through the `template` that tells AWS Cloudformation to build a stack and provision the resources necessary.
+
+### 1. Stage: Validate the SAM template
+First thing we do is to validate the SAM template to check if the yaml we provide is valid.
+
+```python
+sam validate
+```
+```bash
+> 2020-01-21 10:28:39 Found credentials in environment variables.
+> /path/to/fastapi-aws-lambda-example/template.yml is a valid SAM Template
+```
+
+### 2. Stage: Build the deployment package
+Next up, we build the deployment package. If your application depends on packages that have natively compiled programs you pass `--use-container` and SAM will attempt to build the application in a Docker container using based on [LambCI](https://github.com/lambci). Optionally you can see what's happening in the container if you also pass the `--debug` flag.
+
+```python
+sam build --use-container --debug
+```
+
+This will build the deployment package and store it in `.aws-sam/build` along with a new `template.yaml` that now also contains the values we `!Sub` 'ed or substituted like so `${AWS::AccountId}`, in the initial template.
+
+```bash
+Starting Build inside a container
+Building resource 'FastapiExampleLambda'
+
+Fetching lambci/lambda:build-python3.7 Docker container image......
+Mounting /path/to/fastapi-aws-lambda-example as /tmp/samcli/source:ro,delegated inside runtime container
+
+Build Succeeded
+
+Built Artifacts  : .aws-sam/build
+Built Template   : .aws-sam/build/template.yaml
+
+Commands you can use next
+=========================
+[*] Invoke Function: sam local invoke
+[*] Package: sam package --s3-bucket <yourbucket>
+
+Running PythonPipBuilder:ResolveDependencies
+Running PythonPipBuilder:CopySource
+```
+
+### 3. Stage: Package the application
+Up next, packaging. As stated in the beginning, when an application in an AWS Lambda exceeds a certain size or has dependencies, we have to package the application and either upload it in the AWS console, or prepare an intermediate AWS S3 bucket and let AWS Lambda get the application package from there. AWS SAM requires you to do the latter, or better, does it for you if you provision a bucket and pass it with `--s3-bucket my-travis-deployment-bucket`.
+
+```python
+sam package --s3-bucket my-travis-deployment-bucket --output-template-file out.yml --region eu-west-1
+```
+Which returns:
+
+```bash
+2020-01-21 10:48:12 Found credentials in environment variables.
+Uploading to 2adfa5ddb62b541b7cf323cda43ee394  8523862 / 8523862.0  (100.00%)Successfully packaged artifacts and wrote output template to file out.yml.
+Execute the following command to deploy the packaged template
+sam deploy --template-file /path/to/fastapi-aws-lambda-example/out.yml --stack-name <YOUR STACK NAME>
+```
+Now the application is packaged and a final template has been created that will now be used to tell AWS Cloudformation where the package is.
+
+### 4. Stage: Deploy the application
+```python
+sam deploy --template-file out.yml --stack-name example-stack-name --region eu-west-1 --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM
+```
+```bash
+Waiting for stack create/update to complete
+Successfully created/updated stack - example-stack-name
+```
+
+This last step will finally deploy the application `--stack-name` to a `--region`. Important to note here is the option `--no-fail-on-empty-changeset`. Deploying a new version of your application code does not change the stack itself. So running the command without this option will result in failure. With this you can however push consecutive updates of your codes to the same stack.
+
 
 
 

@@ -21,7 +21,7 @@ Pre-commit aims to solve this by managing the installation and execution of hook
 ### installation
 The installation is as easy as
 
-```
+```yaml
 pip install pre-commit
 ```
 
@@ -52,7 +52,7 @@ repos:
 
 All the config does, is specifying the repositories that contain the hooks you want to use, and optional args you can add to specific hooks. After you setup your config, you attach the hooks to your repository using:
 
-```
+```yaml
 pre-commit install
 ```
 

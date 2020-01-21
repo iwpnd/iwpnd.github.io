@@ -3,7 +3,7 @@ layout: post
 title: How to continously deploy a fastAPI to AWS Lambda with AWS SAM
 tags: [python, fastapi, aws, aws lambda, aws sam]
 categories: python fastapi aws
-date:   2020-01-16 13:37:00 +0200
+date:   2020-01-21 13:37:00 +0200
 ---
 
 My last [article about fastAPI](https://iwpnd.pw/articles/2020-01/opinion-on-fastapi) was supposed to be an article about how to deploy a fastAPI on a budget, but instead turned out to be an opinion on fastAPI and I left it at that. Let's change that.
@@ -21,7 +21,7 @@ First we setup a role that the AWS Lambda will assume within our AWS account. Ro
 ### Setup an AWS S3 bucket
 For small applications that only use vanilla python without external libraries one could quickly copy and paste the code into the AWS Lambda console. Bigger applications that use third-party libraries however will either be uploaded as a zip file, or in our case we will provide the location of our deployment package as an AWS S3 bucket. If you have AWS CLI properly setup you can create a bucket with:
 
-```bash
+```python
 aws s3api create-bucket \
 --bucket my-travis-deployment-bucket \
 --region eu-west-1 \
@@ -125,15 +125,15 @@ First we will create a new policy. This time we have to be more specific because
 </details>
   
 
-Continuing, you go to the [IAM console](https://console.aws.amazon.com/iam/), but this time you will create a user with *programmatic access* and a meaningful name such as `travisdeploymentuser` or the likes. Now we attach the policy we just created to the Travis user. Done. 
+Continuing, you go to the [IAM console](https://console.aws.amazon.com/iam/), but this time you will create a user with *programmatic access* and a meaningful name such as `travisdeploymentuser` or the likes. Now we attach the policy we just created to the Travis user. We get prompted with the `AWS-ACCESS-KEY-ID` and the `AWS-SECRET-ACCESS-KEY` of the user. Note those down for now. Done. 
 
 ## The example application
 For the sake of this tutorial I created a [Github repository](https://github.com/iwpnd/fastapi-aws-lambda-example) with an example application that you can use as a first step and to/or built on top.
 
-### Structure
+### Application structure
 Inspired by the [fastapi-realworld-example-app](https://github.com/nsidnev/fastapi-realworld-example-app), I neatly separated the pydantic models, the configuration, the endpoints and the routers.
 
-```bash
+```
 .
 ├── Dockerfile
 ├── LICENSE
@@ -173,7 +173,7 @@ I also already included a `.pre-commit-configuration.yaml` for you to start usin
 ### Test the application locally
 To test the example application locally we have a couple of options. One is by cloning the [repository](https://github.com/iwpnd/fastapi-aws-lambda-example) und starting it locally with uvicorn. The other is to build a docker image from the `Dockerfile` in the repository and expose the app from within a container.
 
-```bash
+```python
 git clone https://github.com/iwpnd/fastapi-aws-lambda-example
 cd fastapi-aws-lambda-example
 # create and activate a virtual environment
@@ -185,7 +185,7 @@ uvicorn example_app.main:app --host 0.0.0.0 --port 8080 --reload
 
 Or
 
-```docker
+```python
 docker build -t example_app_image .
 docker run -p 8080:8080 -name example-app-container example_app_image
 ```
@@ -249,7 +249,7 @@ The `event` is what AWS Lambda uses to pass in event data to the `handler`. The 
 
 ### Mangum as the handler for event and context
 A fastapi application does not have a handler, so that's what [Mangum](https://github.com/erm/mangum) is for. It wraps the `app`, therefor will receive `event` and `context` in a AWS Lambda execution environment and will pass those on to the `app` itself.  
-For this to work we have to setup AWS API Gateway proxy integration to pass the raw request to the AWS Lambda, and let the `app` decide on how to process the information and what to return. This is what allows this setup in the first place.
+For this to work we have to setup AWS API Gateway proxy integration to pass the raw request to the AWS Lambda, and let the `app` decide on how to process the information and what to return, including 404s etcpp. This is what allows this setup in the first place.
 
 ## Deploy with AWS SAM
 To deploy the AWS Lambda function we have now built, we will use the AWS Serverless Application Model ([AWS SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html), an open source framework to build serverless applications. As an extension to [AWS Cloudformation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html) it integrates nicely with all the other AWS services we need and lets us build our infrastructure from code - the `template.yml` in the [repository]([repository](https://github.com/iwpnd/fastapi-aws-lambda-example)).
@@ -261,8 +261,20 @@ To deploy the AWS Lambda function we have now built, we will use the AWS Serverl
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-    fastAPI aws lambda example
+    fastAPI aws lambda example [...]
+    
+```
+
+</summary>
+
+```yaml
 Resources:
+    FastapiExampleGateway:
+        Type: AWS::Serverless::Api
+        Properties:
+            StageName: prod
+            OpenApiVersion: '3.0.0'
+
     FastapiExampleLambda:
         Type: AWS::Serverless::Function
         Properties:
@@ -284,17 +296,11 @@ Resources:
             # other options, see -> docs
             Role: !Sub arn:aws:iam::${AWS::AccountId}:role/fastapilambdarole
 
-    FastapiExampleGateway:
-        Type: AWS::Serverless::Api
-        Properties:
-            StageName: prod
-            OpenApiVersion: '3.0.0'
-
 ```
 
 </details>
 
-There are some things we have to unpack here. What we do is, we tell AWS Cloudformation to provision resources on our behalf and to deploy them in a stack. In the *Resources* section you see the Lambda function we want to build from the code in the *CodeUri* with the `handler` in *Handler*. We define the *Runtime* of the Lambda, as well as *MemorySize* and *Timeout*. It is important for you to attach the proper role in the *Role* section, that we have created earlier. In the *Events* section we implicitly tell AWS Cloudformation to provision an API Gateway with `{proxy+}` integration, because as you recall that's what makes this setup work in the first place.
+There are some things we have to unpack here. What we do is, we tell AWS Cloudformation to provision resources on our behalf and to deploy them in a stack. In the *Resources* section you see the API Gateway first, then the Lambda function we want to build from the code in the *CodeUri* with the `handler` in *Handler*. We define the *Runtime* of the Lambda, as well as *MemorySize* and *Timeout*. It is important for you to attach the proper role in the *Role* section, that we have created earlier. In the *Events* section we tell AWS Cloudformation to use `FastapiExampleGateway` as the API Gateway with `{proxy+}` integration, because as you recall that's what makes this setup work in the first place.
 Check out the official [Template Anatomy](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-specification-template-anatomy.html) to get a better understanding of other options available.
 
 Once setup, you can now deploy the [fastapi-aws-lambda-example application]([repository](https://github.com/iwpnd/fastapi-aws-lambda-example)) from your local machine, through the `template` that tells AWS Cloudformation to build a stack and provision the resources necessary.
@@ -367,15 +373,64 @@ Successfully created/updated stack - example-stack-name
 
 This last step will finally deploy the application `--stack-name` to a `--region`. Important to note here is the option `--no-fail-on-empty-changeset`. Deploying a new version of your application code does not change the stack itself. So running the command without this option will result in failure. With this you can however push consecutive updates of your codes to the same stack.
 
+If you now go to the [API Gateway Console](https://eu-west-1.console.aws.amazon.com/apigateway/main/apis?region=eu-west-1) you will see your API deployed to the `prod` stage at [https://xxxxxxxxxx.execute-api.eu-west-1.amazonaws.com/prod]().
 
+## Continuous deployment with Travis
+Now for the last part, the continous deployment through Github and Travis. The idea is that any code commit that passes an automated testing phase is automatically released into the production environment, and is accessible by the user. This means that the stages we laid out above, will no longer be executed manually by you, but instead in a Travis CI pipeline. Aight, let'se go.
 
+1. Go to [https://travis-ci.com/](https://travis-ci.com/) and sign up with your github account.
 
+2. Accept the Authorization of Travis CI and you’ll be redirected to GitHub.
 
-setup sam template
-- what is a sam template
-- how is it structured
-- proxy: use the default lambda-proxy integration for API Gateway. This configuration example treats API Gateway as a transparent proxy, passing all requests directly to your Flask application, and letting the application handle errors, 404s etc.
+3. Click on your profile picture in the top right of your Travis Dashboard, click the green Activate button, and select the repositories you want to use with Travis CI. 
 
-setup travis
-- encrypt travis user credentials
-- travis structure
+4. Select the repository of your application
+
+5. Encrypt your `AWS-ACCESS-KEY-ID` and your `AWS-SECRET-ACCESS-KEY` of the `travisdeploymentuser` we created at the beginning like [this](https://docs.travis-ci.com/user/encryption-keys#usage), and put those in the .travis.yml file
+
+```yaml
+language: python
+cache: pip
+python:
+- '3.7'
+install:
+- pip install awscli
+- pip install aws-sam-cli
+jobs:
+  include:
+    - stage: test
+      script:
+        - pip install pytest
+        - pip install -e .
+        - pytest . -v
+    - stage: deploy
+      script:
+        - sam validate
+        - sam build --debug
+        - sam package --s3-bucket my-travis-deployment-bucket --output-template-file out.yml --region eu-west-1
+        - sam deploy --template-file out.yml --stack-name example-stack-name --region eu-west-1 --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM
+      skip_cleanup: true
+      if: branch = master
+notifications:
+  email:
+    on_failure: always
+env:
+  global:
+  - AWS_DEFAULT_REGION=eu-west-1
+  - secure: your-encrypted-aws-access-key-id
+  - secure: your-encrypted-aws-secret-access-key
+```
+
+6. Commit the .travis.yml file to your repository and check your build process in the [Travis dashboard](https://travis-ci.com/dashboard).
+
+From now on every time you commit changes to your repository `master` branch, it will be immediately be deployed to AWS Lambda.
+
+## Fazit
+1. We learned how to create a new user and policies in AWS IAM
+2. We now have a basic application we can build upon
+3. We learned about AWS API Gateway and AWS Lambda
+4. We learned how [Mangum](https://github.com/erm/mangum) works
+5. We learned about AWS SAM and how to deploy an application from your own machine
+6. We learned how to use Travis for continous deployment of said application instead of doing it manually
+
+If you have any questions feel free to reach out to me in the [example repository](https://github.com/iwpnd/fastapi-aws-lambda-example) or via mail.

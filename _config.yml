@@ -36,14 +36,14 @@ footer-text: Copyright (c) 2020 Benjamin Ramser
 disqus: 
 
 gitalk:
-  clientID: 
-  clientSecret: 
-  repo: 
-  owner: 
-
+  clientID: {{ site.env.gitalkclientid }}
+  clientSecret: {{ site.env.gitalksecret }}
+  repo: iwpnd-blog-comments
+  owner: iwpnd
+github_comments_repository: iwpnd/iwpnd-blog-comments
 google_analytics: UA-156087226-1
 
-url: 
+url: https://iwpnd.pw
 baseurl: 
 permalink: /articles/:year-:month/:title #/:title/
 paginate_path: /page:num/
@@ -76,6 +76,7 @@ plugins:
   - jekyll-sitemap # Create a sitemap using the official Jekyll sitemap gem
   - jekyll-feed # Create an Atom feed using the official Jekyll feed gem
   - jekyll-paginate
+  - jekyll-environment-variables
 
 # Exclude these files from your production _site
 exclude:

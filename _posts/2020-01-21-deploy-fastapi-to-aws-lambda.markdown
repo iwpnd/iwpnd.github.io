@@ -5,6 +5,7 @@ tags: [python, fastapi, aws, aws lambda, aws sam]
 categories: python fastapi aws
 date:   2020-01-21 13:37:00 +0200
 toc: true
+github_comments_issueid: "1"
 ---
 
 My last [article about fastAPI](https://iwpnd.pw/articles/2020-01/opinion-on-fastapi) was supposed to be an article about how to deploy a fastAPI on a budget, but instead turned out to be an opinion on fastAPI and I left it at that. Let's change that.

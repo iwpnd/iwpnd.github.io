@@ -36,8 +36,9 @@ footer-text: Copyright (c) 2020 Benjamin Ramser
 disqus: 
 
 gitalk:
-  clientID: {{ site.env.gitalkclientid }}
-  clientSecret: {{ site.env.gitalksecret }}
+  enabled: true
+  clientID: d69dd8bf200ce81a8139
+  clientSecret: 2f4934d2ff8c4c108972d908f6495062cba61c0e
   repo: iwpnd-blog-comments
   owner: iwpnd
 github_comments_repository: iwpnd/iwpnd-blog-comments

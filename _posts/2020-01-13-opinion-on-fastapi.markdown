@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Opinion on fastAPI
+title: On fastAPI
 tags: [python, fastapi]
 categories: python fastapi
 date:   2020-01-13 13:37:00 +0200
@@ -24,7 +24,10 @@ fastAPI uses [pydantic](https://github.com/samuelcolvin/pydantic/) for data vali
 
 - **automatic interactive documentation**:  
 Writing documentation for your API is a no-brainer. In Flask I would build my API and at the very least document, the endpoints my API provides, the example input parameters and some example output that is to be expected. Now, that's two steps at least - build, document.
-With fastAPI, I build my API and the documentation is built automatically from the routes, python typing and the input/output models you define. All of this comes with the interactive Swagger UI that you can only love.
+With fastAPI, I build my API and the documentation is built automatically from the routes, python typing and the input/output models you define. 
+
+- **SwaggerUI**
+All of this comes with the interactive Swagger UI that you can only love. I don't have to build a frontend to work with my API, I can just spin up a local uvicorn server with my fastAPI application and it's automagically generated Swagger UI and I can interact with all endpoints of my application. Awesome, to say the least.
 
 Now that's my two cents on fastAPI, just give it a try in your next project and follow in the footsteps of other [adopters](https://fastapi.tiangolo.com/#opinions).
 

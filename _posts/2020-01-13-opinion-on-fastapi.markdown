@@ -11,7 +11,7 @@ Whenever I wanted people to interface some module I wrote or let them do inferen
 I didn't know that I needed something else until somebody told me about [fastAPI](https://fastapi.tiangolo.com/). See, you can build APIs with [Flask](https://github.com/pallets/flask), but it was not specifically intended with that task in mind, but with the ability to construct complex web applications. While that is not specifically excluding, there's still that "right tool for the job" mentality that I want to keep in mind when I build things. 
 
 ## things I like about fastAPI
-I'm not one to tell you about the nitty-gritty details of both frameworks, and this is certainly not a Flask vs fastAPI discussion. I can, however, tell you what I like about fastAPI, you take a look at it and decide for yourself.
+I'm not one to tell you about the nitty-gritty details of both frameworks, and this is certainly not a Flask vs fastAPI discussion. I let other people talk about the differences between all of those available frameworks. One example would be a great [talk by Chris Withers](https://www.youtube.com/watch?v=3DLwPcrE5mA). What I can do, however, is tell you what I like about fastAPI, you take a look at it and decide for yourself. 
 
 - **documentation**:   
 I kind of judge documentation by the times I have to look up things outside of the actual documentation. In this case, it was (almost) none. [fastAPI](https://fastapi.tiangolo.com/) has an outstanding documentation with a great [tutorial section](https://fastapi.tiangolo.com/tutorial/intro/) that gets you started in no-time. Once you got started, it holds a section for everything you would love to do a deep-dive on.

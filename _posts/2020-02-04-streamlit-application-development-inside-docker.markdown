@@ -121,7 +121,7 @@ That's it. :ship:
 
 ## Weightwhat?
 
-Now, back to that CRUD api that I needed a frontend for. It turns out streamlit is compatible with a lot of the major libraries and frameworks that we all love. I used that change to finally learn a little about declarative visualization with [Altair](https://altair-viz.github.io/). Altair is not only highly customizable but also very well documented and allows for easy to implement interactivity, which is a nice-to-have on an application evolving around data exploration. You can check it out [here](https://github.com/iwpnd/weightwhat).
+Now, back to that CRUD api that I needed a frontend for. It turns out streamlit is compatible with a lot of the major libraries and frameworks that we all love. I used that chance to finally learn a little about declarative visualization with [Altair](https://altair-viz.github.io/). Altair is not only highly customizable but also very well documented and allows for easy to implement interactivity, which is a nice-to-have on an application evolving around data exploration. You can check it out [here](https://github.com/iwpnd/weightwhat).
 
 <p align="center">
 <img src="/img/2020-02-streamlit/weightwhat.png" alt="weightwhat">

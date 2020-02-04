@@ -68,7 +68,7 @@ I think one can immediately see why streamlit excites me. Never could you faster
 
 ## Developing streamlit inside a container
 
-Until I have tested to deploy a streamlit application in AWS Lambda, I assume that the easiest way is to develop it in a container and ship that, to avoid shipping my machine. For that purpose, I created a [simple template](https://github.com/iwpnd/streamlit-docker-example) for you to try it out.
+Until I have tested to deploy a streamlit application in AWS Lambda, I assume that the easiest way is to develop it in a container and ship that, to [avoid shipping my machine](https://pics.me.me/it-works-on-my-machine-then-well-ship-your-machine-62072263.png). For that purpose, I created a [simple template](https://github.com/iwpnd/streamlit-docker-example) for you to try it out.
 
 ```bash
 # Dockerfile

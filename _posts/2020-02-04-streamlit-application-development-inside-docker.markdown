@@ -62,7 +62,9 @@ So what can we unpack here? We have some interactivity, and we have conditions f
 
 ### Now what?
 
-I think one can immediately see why that excites me. Never could you faster create an application than now [streamlit](https://www.streamlit.io/) enables you to do. You do not have to rely on your frontend engineers, you don't have to wait for them to allocate some time to your little project. Nor do you have to wait until somebody else can use your model for inference, see your visualization without handing out files or explore your datasets. Sure, you could have that interactivity and visualization in a jupyter notebook, but the fun stops when you have to version control that beast. I'm hooked, are you?
+Adrien Treuille summed streamlit up in a great [blog post](https://towardsdatascience.com/coding-ml-tools-like-you-code-ml-models-ddba3357eace) on Medium where he goes into more detail on the architecture and some more examples.
+
+I think one can immediately see why streamlit excites me. Never could you faster create an application than now [streamlit](https://www.streamlit.io/) enables you to do. You do not have to rely on your frontend engineers, you don't have to wait for them to allocate some time to your little project. Nor do you have to wait until somebody else can use your model for inference, see your visualization without handing out files or explore your datasets. Sure, you could have that interactivity and visualization in a jupyter notebook, but the fun stops when you have to version control that beast. I'm hooked, are you?
 
 ## Developing streamlit inside a container
 

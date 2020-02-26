@@ -14,6 +14,10 @@ Say you are faced with the problem of extracting the name of a location from a t
 3. Are on a budget
 4. Want to optimize for execution time
 
+# tl;dr
+
+Go to [https://flashgeotext.iwpnd.pw](https://flashgeotext.iwpnd.pw), ignore all that and use it right away.
+
 ## Let's brute force it
 
 Let's brute for this problem and check every word in a lookup against an input text. 

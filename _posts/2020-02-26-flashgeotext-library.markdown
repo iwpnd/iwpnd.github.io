@@ -3,7 +3,7 @@ layout: post
 title: Introducing flashgeotext&#58; Extract city and country names from text
 tags: [python, pytest, flashgeotext]
 categories: python library
-date: 2020-02-26 10:13:37 +0200
+date: 2020-02-25 10:13:37 +0200
 toc: true
 ---
 

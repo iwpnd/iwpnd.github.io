@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Introducing flashgeotext&#58; Extract city and country names from text
+title: Introducing flashgeotext&#58; extract city and country names from text
 tags: [python, pytest, flashgeotext]
 categories: python library
 date: 2020-02-25 10:13:37 +0200

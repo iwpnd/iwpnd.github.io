@@ -9,6 +9,10 @@ toc: true
 
 After I finally published [flashgeotext](https://iwpnd.pw/articles/2020-02/flashgeotext-library) last month, it was time for the next item on the to-do list - Apache Kafka. After I somehow avoided the topic completely for the last years, aside from that one friend that wouldn't shut up about it, I noticed that more often than not Apache Kafka knowledge is a requirement for a lot of positions in data engineering nowadays. So I did what I recommand everybody starting out - check out [Tim Berglund's introduction on Apache Kafka](https://www.youtube.com/watch?v=06iRM1Ghr1k) on YouTube and skinny-dip into the rabbit hole from there.
 
+# tl;dr
+
+Find the finished project on GitHub: [geo-stream-kafka](https://github.com/iwpnd/geo-stream-kafka)
+
 # What is Apache Kafka?
 
 Always great to read an introduction into a complex topic from somebody who just recently started out with it, right? What could go wrong. So in its core, Apache Kafka is a messaging system with somebody/something producing a message on the one side and a somebody/something consuming the message on the other side, and a lot of magic in between. 

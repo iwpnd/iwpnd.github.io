@@ -19,7 +19,7 @@ even though the article is mentioning Moscow.
 
 For that purpose I wrote [toponym](https://github.com/iwpnd/toponym).
 
-This little tutorial will quickly show you how you can work around that issue. We will be using `newspaper3k` ([github](https://github.com/codelucas/newspaper)) to extract an article text from [The Moscow Times](https://www.themoscowtimes.com/). Then we will create toponyms using `toponyms` ([github](https://github.com/iwpnd/toponym)) library and search the article text for city name mentions using `flashgeotext` ([github](https://github.com/iwpnd/flashgeotext)).
+This little tutorial will quickly show you how you can work around that issue. We will be using `newspaper3k` ([github](https://github.com/codelucas/newspaper)) to extract an article text from [The Moscow Times](https://www.themoscowtimes.com/). Then we will create toponyms using `toponym` ([github](https://github.com/iwpnd/toponym)) library and search the article text for city name mentions using `flashgeotext` ([github](https://github.com/iwpnd/flashgeotext)).
 
 ## Download and extract an article with newspaper3k
 

@@ -48,3 +48,25 @@ An AWS security group acts as a virtual firewall for your AWS resources inside o
 | HTTPS | 443 | 0.0.0.0/0 |
 | HTTP | 80 | 0.0.0.0/0 |
 
+## Launch an EC2 instance
+With the prerequisites out of the way, we can go a head and launch our first instance. In the AWS Management Console go to Services > Compute > EC2 and spank that Launch button.
+
+### Choose an Amazon Machine Image (AMI)
+First, you will have to select an AMI to run on your instance. I opted for Amazon Linux 2 AMI (HVM) 64-bit (x86) for no particular reason. It's free tier eligible, if you still can make use of that, and is built by Amazon to have optimal performance on EC2. You can use another AMI that suits you. Just make sure to adapt things like package management that I will be using in this post to the OS of your choice.
+
+### Choose an Instance Type
+Next up, you're prompted to select an instance type. Now this is where you can either go all out, or start reasonably small. I was planning to use the Docker Swarm cluster for small services that I want to test in a production environment. I do not expect any users, nor do I run computational heavy stuff on it. You can however, that is up to you and your budget. A `t2.small` is roughly 18,00 Euro a month including storage and traffic if it's running 24/7 on eu-west-1. If you registered an account with AWS because you're on a learning path, then you will most likely still be eligible for the free tier, which means that `t2.micro` instance is free of charge for a year. A `t2.micro`, for the purpose of this tutorial, is all we need.
+
+### Configure your Instance
+
+<p align="center">
+<img src="/img/2020-05-docker-swarm/aws-ec2-config.png" alt="aws ec2 configuration">
+</p>
+
+There is not much to change here. If you're just starting out with your AWS account the Network will be prepopulated with your VPC already. The subnet can also stay on default. We want to, however _enable_ *Auto-assign Public IP*. If you plan to create resources on AWS with this particular EC2 instance, e.g. create an Amazon S3 Bucket, you will need to attach an IAM role to your instance for the proper permissions set up. In our case, we will not create any other resources WITH the EC2 Instance, so we leave that blank. *Stop - Hibernate behaviour* is interesting, if you plan on often shutting an instance down if you don't use it, and bring it back up when you use it. In this case on *Stop* all your instances Files and RAM will be dumped to an attached file system and you can use this if you bring it up another time to have everything where you left it off. Keep in mind however, that you will still pay for the attached storage 24/7. Monitoring is also pretty good with CloudWatch. It does come with a cost however, and since we will utilize Traefik and Portainer, we will have our own monitoring in place. Leave the rest as seen in the Screenshot and continue with *Next: Add Storage*.
+
+### Add Storage
+Pretty much just leave as is, unless you need more storage or have other requirements that you think will not be fulfilled with the default settings. Continue
+
+### Add Tags
+This will be the first of 

@@ -42,12 +42,12 @@ First, we will create a new policy. This time we have to be more specific becaus
 {
  "Version": "2012-10-17",
  "Statement": [
- {
- "Sid": "AllowListBucket",
- "Effect": "Allow",
- "Action": [
- "s3:ListBucket"
- ],
+    {
+    "Sid": "AllowListBucket",
+    "Effect": "Allow",
+    "Action": [
+    "s3:ListBucket"
+    ],
  [...]
 ```
 </summary>
@@ -55,72 +55,72 @@ First, we will create a new policy. This time we have to be more specific becaus
 ```json 
 {
  "Version": "2012-10-17",
- "Statement": [
- {
- "Sid": "AllowListBucket",
- "Effect": "Allow",
- "Action": [
- "s3:ListBucket"
- ],
- "Resource": [
- "arn:aws:s3:::my-travis-deployment-bucket"
- ]
- },
- {
- "Sid": "AllowPassLambdaRole",
- "Effect": "Allow",
- "Action": [
- "iam:PassRole"
- ],
- "Resource": [
- "arn:aws:iam::<your-account-id-here>:role/fastapilambdarole"
- ]
- },
- {
- "Sid": "AllowS3Actions",
- "Effect": "Allow",
- "Action": [
- "s3:PutObject",
- "s3:GetObjectAcl",
- "s3:GetObject",
- "s3:DeleteObject",
- "s3:PutObjectAcl"
- ],
- "Resource": "arn:aws:s3:::my-travis-deployment-bucket/*"
- },
- {
- "Sid": "AllowLambda",
- "Effect": "Allow",
- "Action": [
- "lambda:*"
- ],
- "Resource": "*"
- },
- {
- "Sid": "AllowListPolicies",
- "Effect": "Allow",
- "Action": [
- "iam:ListPolicies"
- ],
- "Resource": "*"
- },
- {
- "Sid": "AllowApiGateway",
- "Effect": "Allow",
- "Action": [
- "apigateway:*"
- ],
- "Resource": "*"
- },
- {
- "Sid": "AllowCloudFormation",
- "Effect": "Allow",
- "Action": [
- "cloudformation:*"
- ],
- "Resource": "*"
- }
- ]
+"Statement": [
+    {
+        "Sid": "AllowListBucket",
+        "Effect": "Allow",
+        "Action": [
+            "s3:ListBucket"
+            ],
+        "Resource": [
+            "arn:aws:s3:::my-travis-deployment-bucket"
+        ]
+    },
+    {
+        "Sid": "AllowPassLambdaRole",
+        "Effect": "Allow",
+        "Action": [
+            "iam:PassRole"
+            ],
+        "Resource": [
+            "arn:aws:iam::<your-account-id-here>:role/fastapilambdarole"
+            ]
+        },
+    {
+        "Sid": "AllowS3Actions",
+        "Effect": "Allow",
+        "Action": [
+            "s3:PutObject",
+            "s3:GetObjectAcl",
+            "s3:GetObject",
+            "s3:DeleteObject",
+            "s3:PutObjectAcl"
+            ],
+        "Resource": "arn:aws:s3:::my-travis-deployment-bucket/*"
+        },
+    {
+        "Sid": "AllowLambda",
+        "Effect": "Allow",
+        "Action": [
+            "lambda:*"
+            ],
+        "Resource": "*"
+        },
+    {
+        "Sid": "AllowListPolicies",
+        "Effect": "Allow",
+        "Action": [
+            "iam:ListPolicies"
+            ],
+        "Resource": "*"
+        },
+    {
+        "Sid": "AllowApiGateway",
+        "Effect": "Allow",
+        "Action": [
+            "apigateway:*"
+            ],
+        "Resource": "*"
+        },
+    {
+        "Sid": "AllowCloudFormation",
+        "Effect": "Allow",
+        "Action": [
+            "cloudformation:*"
+        ],
+        "Resource": "*"
+    }
+    ]
 }
  
 ```
@@ -203,26 +203,22 @@ from example_app.api.api_v1.api import router as api_router
 from example_app.core.config import API_V1_STR, PROJECT_NAME
 from mangum import Mangum
 
-app = FastAPI(
- title=PROJECT_NAME,
-)
-
-
+app = FastAPI(title=PROJECT_NAME)
 app.include_router(api_router, prefix=API_V1_STR)
 
 
 @app.get("/ping")
 def pong():
- """
- Sanity check.
+    """
+    Sanity check.
 
- This will let the user know that the service is operational.
+    This will let the user know that the service is operational.
 
- And this path operation will:
- * show a life sign
+    And this path operation will:
+    * show a life sign
 
- """
- return {"ping": "pong!"}
+    """
+    return {"ping": "pong!"}
 
 
 handler = Mangum(app, enable_lifespan=False)
@@ -238,12 +234,12 @@ from your_database import database
 db = database.connect()
 
 def handler(event, context):
- msg = Yourclass(
- text=event["message"],
- connection=db.connection
- )
- msg.build()
- return msg.transformed
+    msg = Yourclass(
+    text=event["message"],
+    connection=db.connection
+    )
+    msg.build()
+    return msg.transformed
 ```
 
 You can import your libraries, like `your_module` or `your_database` and you can create variables or database connections. Everything outside of the `handler` function will execute when the AWS Lambda is provisioned. After that, you can use it within the `handler` that AWS Lambda will use on consecutive calls. 
@@ -257,33 +253,38 @@ For this to work we have to setup AWS API Gateway proxy integration to pass the 
 To deploy the AWS Lambda function we have now built, we will use the AWS Serverless Application Model ([AWS SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html), an open-source framework to build serverless applications. As an extension to [AWS Cloudformation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html) it integrates nicely with all the other AWS services we need and lets us build our infrastructure from code - the `template.yml` in the [repository]([repository](https://github.com/iwpnd/fastapi-aws-lambda-example)).
 
 ```yaml
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+    fastAPI aws lambda example
 Resources:
- FastapiExampleGateway:
- Type: AWS::Serverless::Api
- Properties:
- StageName: prod
- OpenApiVersion: '3.0.0'
+    FastapiExampleLambda:
+        Type: AWS::Serverless::Function
+        Properties:
+            Events:
+                ApiEvent:
+                    Properties:
+                        RestApiId:
+                            Ref: FastapiExampleGateway
+                        Path: /{proxy+}
+                        Method: ANY
+                    Type: Api
+            FunctionName: fastapi-lambda-example
+            CodeUri: ./
+            Handler: example_app.main.handler
+            Runtime: python3.7
+            Timeout: 300 # timeout of your lambda function
+            MemorySize: 128 # memory size of your lambda function
+            Description: fastAPI aws lambda example
+            # other options, see ->
+            # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-specification-template-anatomy-globals.html#sam-specification-template-anatomy-globals-supported-resources-and-properties
+            Role: !Sub arn:aws:iam::${AWS::AccountId}:role/fastapilambdarole
 
- FastapiExampleLambda:
- Type: AWS::Serverless::Function
- Properties:
- Events:
- ApiEvent:
- Properties:
- RestApiId:
- Ref: FastapiExampleGateway
- Path: /{proxy+}
- Method: ANY
- Type: Api
- FunctionName: fastapi-lambda-example
- CodeUri: ./
- Handler: example_app.main.handler
- Runtime: python3.7
- Timeout: 300 # timeout of your lambda function
- MemorySize: 128 # memory size of your lambda function
- Description: fastAPI aws lambda example
- # other options, see -> docs
- Role: !Sub arn:aws:iam::${AWS::AccountId}:role/fastapilambdarole
+    FastapiExampleGateway:
+        Type: AWS::Serverless::Api
+        Properties:
+            StageName: prod
+            OpenApiVersion: '3.0.0'
 
 ```
 
@@ -383,28 +384,29 @@ install:
 - pip install awscli
 - pip install aws-sam-cli
 jobs:
- include:
- - stage: test
- script:
- - pip install pytest
- - pip install -e .
- - pytest . -v
- - stage: deploy
- script:
- - sam validate
- - sam build --debug
- - sam package --s3-bucket my-travis-deployment-bucket --output-template-file out.yml --region eu-west-1
- - sam deploy --template-file out.yml --stack-name example-stack-name --region eu-west-1 --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM
- skip_cleanup: true
- if: branch = master
+  include:
+    - stage: test
+      script:
+        - pip install pytest
+        - pip install -e .
+        - pytest . -v
+    - stage: deploy
+      script:
+        - sam validate
+        - sam build --debug
+        - sam package --s3-bucket my-travis-deployment-bucket --output-template-file out.yml --region eu-west-1
+        - sam deploy --template-file out.yml --stack-name example-stack-name --region eu-west-1 --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM
+      skip_cleanup: true
+      if: branch = master
 notifications:
- email:
- on_failure: always
+  email:
+    on_failure: always
 env:
- global:
- - AWS_DEFAULT_REGION=eu-west-1
- - secure: your-encrypted-aws-access-key-id
- - secure: your-encrypted-aws-secret-access-key
+  global:
+  - AWS_DEFAULT_REGION=eu-west-1
+  - secure: your-encrypted-aws-access-key-id
+  - secure: your-encrypted-aws-secret-access-key
+
 ```
 
 

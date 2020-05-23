@@ -235,9 +235,9 @@ db = database.connect()
 
 def handler(event, context):
     msg = Yourclass(
-    text=event["message"],
-    connection=db.connection
-    )
+        text=event["message"],
+        connection=db.connection
+        )
     msg.build()
     return msg.transformed
 ```

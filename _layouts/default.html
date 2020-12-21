@@ -1,34 +1,18 @@
+---
+layout: compress
+---
+
 <!DOCTYPE html>
-<html>
-  {% include head.html %}
+<html lang="en" >
+  {% include head.html %}  
   <body>
-    {% include nav.html %}
-
-    {% if page.toc==true %}
-      <aside class="toc">
-        {% include toc.html html=content %}
-      </aside>
-    {% endif %}
-
-    <div id="main" role="main" class="wrapper-content">
-      <div class="container">
+    <main role="main">
+	    
+	    {% include navigation.html %}
+	    
         {{ content }}
-      </div>
-    </div>
-
-    {% include analytics.html %}
+        	    
+    </main>
+            
   </body>
-
-  {% if page.toc==true %}
-  <script>
-    document.getElementById("main").classList.add("withtoc");
-  </script>
-  {% endif %}
-
-  <div class="wrapper-footer-mobile">
-    <footer class="footer">
-      {% include footer.html %}
-    </footer>
-
-
 </html>

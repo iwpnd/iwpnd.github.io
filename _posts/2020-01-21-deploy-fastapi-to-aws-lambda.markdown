@@ -412,7 +412,7 @@ env:
 
 From now on every time you commit changes to your repository `master` branch, it will be immediately be deployed to AWS Lambda.
 
-## Fazit
+## conclusion
 1. We learned how to create a new user and policies in AWS IAM
 2. We now have a basic application we can build upon
 3. We learned about AWS API Gateway and AWS Lambda

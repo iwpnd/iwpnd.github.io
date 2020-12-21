@@ -2,50 +2,11 @@
 layout: default
 ---
 
-<article class="posts">
-  <h1>{{ page.title }}</h1>
+<section class="post">
+  <h2>{{ page.title }}</h2>
+  {{ content }}
+  <span class="meta"><time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time> &middot; {% for tag in page.tags %}
+    <a href="/tag/{{tag}}">{{tag}}</a>{% unless forloop.last %}, {% endunless %}{% endfor %}</span>
+</section>
 
-  <div clsss="meta">
-    <span class="author">
-      {{ page.author }}
-    </span>
 
-    <span class="date">
-      {{ page.date | date: "%Y-%m-%d" }}
-    </span>
-
-    <ul class="tag">
-      {% for tag in page.tags %}
-      <li>
-        <a href="{{ site.url }}{{ site.baseurl }}/tags#{{ tag }}">
-          {{ tag }}
-        </a>
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
-
-  <div class="entry">
-    {{ content }}
-  </div>
-
-  {% include disqus.html %}
-  {% include gitalk.html %}
-</article>
-
-<div class="pagination">
-  {% if page.previous.url %}
-    <span class="prev" >
-      <a href="{{ site.url }}{{ site.baseurl }}{{ page.previous.url }}">
-        ← prev
-      </a>
-    </span>
-  {% endif %}
-  {% if page.next.url %}
-    <span class="next" >
-      <a href="{{ site.url }}{{ site.baseurl }}{{ page.next.url }}">
-        next →
-      </a>
-    </span>
-  {% endif %}
-</div>

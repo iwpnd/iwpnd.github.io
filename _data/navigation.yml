@@ -1,6 +1,8 @@
 links:
   - title: blog
     url: /
+  - title: TIL
+    url: /til
   - title: about
     url: /about
   - title: search

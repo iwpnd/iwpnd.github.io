@@ -1,6 +1,6 @@
 ---
 layout: post
-title: TIL - Create a functional index in PostGIS
+title: Create a functional index in PostGIS
 tags: [til, postgis]
 categories: til postgis
 date: 2020-07-01 09:37:00 +0200

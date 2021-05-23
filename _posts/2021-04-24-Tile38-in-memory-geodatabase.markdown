@@ -11,7 +11,7 @@ For the longest time, it was everything about PostgreSQL and PostGIS. Building s
 What it mostly boiled down to were point-in-polygon, radius searches and if generous a KNN nearby search for either points or polygons. Do you need to use PostGIS for that? Well, if you have a bunch of points or a bunch of polygons I would do best to consider PostGIS for geo-indexed searches. That is until a friend introduced me to Tile38.
 
 ## Tile38
-Tile38 is an open-source, in-memory geo data store, spatial index, and real-time geofence framework.
+[Tile38](https://tile38.com) is an open-source, in-memory geo data store, spatial index, and real-time geofence framework written by Josh Baker ([@tidwall](https://github.com/tidwall))
 There are some things to unpack here.
 
 ## In-memory geo datastore

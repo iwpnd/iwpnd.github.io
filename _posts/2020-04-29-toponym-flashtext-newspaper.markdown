@@ -35,7 +35,6 @@ article.parse()
 
 This instantiate an article object, download the article at the given url and will dechrome the html to parse the actual article text.
 
-
 ```python
 print(article.text)
 

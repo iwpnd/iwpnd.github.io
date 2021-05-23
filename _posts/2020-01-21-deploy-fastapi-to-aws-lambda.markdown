@@ -1,18 +1,18 @@
 ---
 layout: post
-title: How to continuously deploy a fastAPI to AWS Lambda with AWS SAM
-tags: [python, fastapi, aws, aws lambda, aws sam]
-categories: python fastapi aws
+title: How to continuously deploy a FastAPI to AWS Lambda with AWS SAM
+tags: [python, FastAPI, aws, aws lambda, aws sam]
+categories: python FastAPI aws
 date: 2020-01-21 13:37:00 +0200
 toc: true
 github_comments_issueid: "1"
 ---
 
-My last [article about fastAPI](https://iwpnd.pw/articles/2020-01/opinion-on-fastapi) was supposed to be an article about how to deploy a fastAPI on a budget, but instead turned out to be an opinion on fastAPI and I left it at that. Let's change that.
+My last [article about FastAPI](https://iwpnd.pw/articles/2020-01/opinion-on-FastAPI) was supposed to be an article about how to deploy a FastAPI on a budget, but instead turned out to be an opinion on FastAPI and I left it at that. Let's change that.
 
-FastAPIs [documentation](https://fastapi.tiangolo.com/) is exhaustive on all accounts. It gets you started real quick, takes you by the hand if it gets more complicated and even describes features in detail when it doesn't have to. I like it. Where it falls short, however, is when it comes to [deployment](https://fastapi.tiangolo.com/deployment/). That's probably because there are gazillions of ways to deploy an API. The documentation proposes to use [Docker](https://docker.com/) and while I understand that this is the way to go for most companies and most applications, I don't see why I would want to deploy a small application with a few undemanding endpoints to a Docker Swarm or even Kubernetes cluster. Those come with a (hefty) price tag and are not interesting for the private person who just wants to get his hand dirty on fastAPI a little.
+FastAPIs [documentation](https://FastAPI.tiangolo.com/) is exhaustive on all accounts. It gets you started real quick, takes you by the hand if it gets more complicated and even describes features in detail when it doesn't have to. I like it. Where it falls short, however, is when it comes to [deployment](https://FastAPI.tiangolo.com/deployment/). That's probably because there are gazillions of ways to deploy an API. The documentation proposes to use [Docker](https://docker.com/) and while I understand that this is the way to go for most companies and most applications, I don't see why I would want to deploy a small application with a few undemanding endpoints to a Docker Swarm or even Kubernetes cluster. Those come with a (hefty) price tag and are not interesting for the private person who just wants to get his hand dirty on FastAPI a little.
 
-So let's use this article to start over and learn how to set up a basic continuous deployment pipeline for a fastAPI app on a budget. We will be using [AWS API Gateway](https://aws.amazon.com/api-gateway/), [AWS Lambda](https://aws.amazon.com/lambda/) the serverless computing services by AWS and [Travis](https://travis-ci.com/). Both AWS Lambda and AWS API Gateway are billed per API call and by the amount of data that you transfer. If you're still eligible for the free tier of AWS you can use those two services completely free for the scope of this tutorial. If not refer to the pricing example of [AWS API Gateway](https://aws.amazon.com/api-gateway/pricing/#Pricing_Examples) and [AWS Lambda](https://aws.amazon.com/lambda/pricing/). Take a particularly detailed look at the AWS Lambda pricing as this depends on the time your application is running and the memory size that is provisioned to the AWS Lambda. Luckily AWS finally shed some transparency on that matter with a proper [calculator](https://aws.amazon.com/lambda/pricing/#Calculator).
+So let's use this article to start over and learn how to set up a basic continuous deployment pipeline for a FastAPI app on a budget. We will be using [AWS API Gateway](https://aws.amazon.com/api-gateway/), [AWS Lambda](https://aws.amazon.com/lambda/) the serverless computing services by AWS and [Travis](https://travis-ci.com/). Both AWS Lambda and AWS API Gateway are billed per API call and by the amount of data that you transfer. If you're still eligible for the free tier of AWS you can use those two services completely free for the scope of this tutorial. If not refer to the pricing example of [AWS API Gateway](https://aws.amazon.com/api-gateway/pricing/#Pricing_Examples) and [AWS Lambda](https://aws.amazon.com/lambda/pricing/). Take a particularly detailed look at the AWS Lambda pricing as this depends on the time your application is running and the memory size that is provisioned to the AWS Lambda. Luckily AWS finally shed some transparency on that matter with a proper [calculator](https://aws.amazon.com/lambda/pricing/#Calculator).
 
 ## prerequisites
 Let's assume that you already have registered an [AWS account](https://aws.amazon.com/free), set up a user other than `root` and have installed and configured [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) properly. The latter is not a requirement, as you do everything we do in the AWS console, yet it's not a bad idea to learn the AWS CLI anyways.
@@ -130,10 +130,10 @@ First, we will create a new policy. This time we have to be more specific becaus
 Continuing, you go to the [IAM console](https://console.aws.amazon.com/iam/), but this time you will create a user with *programmatic access* and a meaningful name such as `travisdeploymentuser` or the likes. Now we attach the policy we just created to the Travis user. We get prompted with the `AWS-ACCESS-KEY-ID` and the `AWS-SECRET-ACCESS-KEY` of the user. Note those down for now. Done. 
 
 ## The example application
-For the sake of this tutorial, I created a [Github repository](https://github.com/iwpnd/fastapi-aws-lambda-example) with an example application that you can use as a first step and to/or built on top.
+For the sake of this tutorial, I created a [Github repository](https://github.com/iwpnd/FastAPI-aws-lambda-example) with an example application that you can use as a first step and to/or built on top.
 
 ### Application structure
-Inspired by the [fastapi-realworld-example-app](https://github.com/nsidnev/fastapi-realworld-example-app), I neatly separated the pydantic models, the configuration, the endpoints, and the routers.
+Inspired by the [FastAPI-realworld-example-app](https://github.com/nsidnev/FastAPI-realworld-example-app), I neatly separated the pydantic models, the configuration, the endpoints, and the routers.
 
 ```
 .
@@ -173,11 +173,11 @@ For simplicities sake, we have exactly two endpoints. One is `/ping` in `main.py
 I also already included a `.pre-commit-configuration.yaml` for you to start using [pre-commit](https://iwpnd.pw/articles/2020-01/pre-commit-to-the-rescue) right away. It comes with pre-configured hook for [black](https://iwpnd.pw/articles/2020-01/black-python-code-formatter). 
 
 ### Test the application locally
-To test the example application locally we have a couple of options. One is by cloning the [repository](https://github.com/iwpnd/fastapi-aws-lambda-example) and starting it locally with uvicorn. The other is to build a docker image from the `Dockerfile` in the repository and expose the app from within a container.
+To test the example application locally we have a couple of options. One is by cloning the [repository](https://github.com/iwpnd/FastAPI-aws-lambda-example) and starting it locally with uvicorn. The other is to build a docker image from the `Dockerfile` in the repository and expose the app from within a container.
 
 ```
-git clone https://github.com/iwpnd/fastapi-aws-lambda-example
-cd fastapi-aws-lambda-example
+git clone https://github.com/iwpnd/FastAPI-aws-lambda-example
+cd FastAPI-aws-lambda-example
 # create and activate a virtual environment
 pip install -e .
 pip install uvicorn # or anything else that can handle ASGI
@@ -195,10 +195,10 @@ docker run -p 8080:8080 -name example-app-container example_app_image
 No matter what you choose you can now go to your browser and check the documentation of the application via [http://localhost:8080/docs](http://localhost:8000/docs) and test the API through the Swagger UI right there.
 
 ## Wrap the application with Mangum
-For this application to run with AWS Lambda & AWS API Gateway, we have to wrap it with [Mangum](https://github.com/erm/mangum). Mangum works as an adapter for [ASGI applications](https://asgi.readthedocs.io/en/latest/introduction.html) like the ones you can create with fastAPI so that they can send and receive information from API Gateway to Lambda and vice versa.
+For this application to run with AWS Lambda & AWS API Gateway, we have to wrap it with [Mangum](https://github.com/erm/mangum). Mangum works as an adapter for [ASGI applications](https://asgi.readthedocs.io/en/latest/introduction.html) like the ones you can create with FastAPI so that they can send and receive information from API Gateway to Lambda and vice versa.
 
 ```python
-from fastapi import FastAPI
+from FastAPI import FastAPI
 from example_app.api.api_v1.api import router as api_router
 from example_app.core.config import API_V1_STR, PROJECT_NAME
 from mangum import Mangum
@@ -246,17 +246,17 @@ You can import your libraries, like `your_module` or `your_database` and you can
 The `event` is what AWS Lambda uses to pass in event data to the `handler`. The `context` on the other hand provides information about the invocation, function, and execution environment (see [docs](https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html) for more details). 
 
 ### Mangum as the handler for event and context
-A fastapi application does not have a handler, so that's what [Mangum](https://github.com/erm/mangum) is for. It wraps the `app`, therefore it will receive `event` and `context` in an AWS Lambda execution environment and will pass those on to the `app` itself. 
+A FastAPI application does not have a handler, so that's what [Mangum](https://github.com/erm/mangum) is for. It wraps the `app`, therefore it will receive `event` and `context` in an AWS Lambda execution environment and will pass those on to the `app` itself. 
 For this to work we have to setup AWS API Gateway proxy integration to pass the raw request to the AWS Lambda, and let the `app` decide on how to process the information and what to return, including 404s, etc. This is what allows this setup in the first place.
 
 ## Deploy with AWS SAM
-To deploy the AWS Lambda function we have now built, we will use the AWS Serverless Application Model ([AWS SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html), an open-source framework to build serverless applications. As an extension to [AWS Cloudformation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html) it integrates nicely with all the other AWS services we need and lets us build our infrastructure from code - the `template.yml` in the [repository]([repository](https://github.com/iwpnd/fastapi-aws-lambda-example)).
+To deploy the AWS Lambda function we have now built, we will use the AWS Serverless Application Model ([AWS SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html), an open-source framework to build serverless applications. As an extension to [AWS Cloudformation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html) it integrates nicely with all the other AWS services we need and lets us build our infrastructure from code - the `template.yml` in the [repository]([repository](https://github.com/iwpnd/FastAPI-aws-lambda-example)).
 
 ```yaml
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-    fastAPI aws lambda example
+    FastAPI aws lambda example
 Resources:
     FastapiExampleLambda:
         Type: AWS::Serverless::Function
@@ -269,13 +269,13 @@ Resources:
                         Path: /{proxy+}
                         Method: ANY
                     Type: Api
-            FunctionName: fastapi-lambda-example
+            FunctionName: FastAPI-lambda-example
             CodeUri: ./
             Handler: example_app.main.handler
             Runtime: python3.7
             Timeout: 300 # timeout of your lambda function
             MemorySize: 128 # memory size of your lambda function
-            Description: fastAPI aws lambda example
+            Description: FastAPI aws lambda example
             # other options, see ->
             # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-specification-template-anatomy-globals.html#sam-specification-template-anatomy-globals-supported-resources-and-properties
             Role: !Sub arn:aws:iam::${AWS::AccountId}:role/fastapilambdarole
@@ -291,7 +291,7 @@ Resources:
 There are some things we have to unpack here. What we do is, we tell AWS Cloudformation to provision resources on our behalf and to deploy them in a stack. In the *Resources* section you see the API Gateway first, then the Lambda function we want to build from the code in the *CodeUri* with the `handler` in *Handler*. We define the *Runtime* of the Lambda, as well as *MemorySize* and *Timeout*. You need to attach the proper role in the *Role* section, that we have created earlier. In the *Events* section we tell AWS Cloudformation to use `FastapiExampleGateway` as the API Gateway with `{proxy+}` integration, because as you recall that's what makes this setup work in the first place.
 Check out the official [Template Anatomy](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-specification-template-anatomy.html) to get a better understanding of other options available.
 
-Once set up, you can now deploy the [fastapi-aws-lambda-example application]([repository](https://github.com/iwpnd/fastapi-aws-lambda-example)) from your local machine, through the `template` that tells AWS Cloudformation to build a stack and provision the resources necessary.
+Once set up, you can now deploy the [FastAPI-aws-lambda-example application]([repository](https://github.com/iwpnd/FastAPI-aws-lambda-example)) from your local machine, through the `template` that tells AWS Cloudformation to build a stack and provision the resources necessary.
 
 ### 1. Stage: Validate the SAM template
 The first thing we do is to validate the SAM template to check if the YAML we provide is valid.
@@ -301,7 +301,7 @@ sam validate
 ```
 ```
 2020-01-21 10:28:39 Found credentials in environment variables.
-/path/to/fastapi-aws-lambda-example/template.yml is a valid SAM Template
+/path/to/FastAPI-aws-lambda-example/template.yml is a valid SAM Template
 ```
 
 ### 2. Stage: Build the deployment package
@@ -318,7 +318,7 @@ Starting Build inside a container
 Building resource 'FastapiExampleLambda'
 
 Fetching lambci/lambda:build-python3.7 Docker container image......
-Mounting /path/to/fastapi-aws-lambda-example as /tmp/samcli/source:ro,delegated inside runtime container
+Mounting /path/to/FastAPI-aws-lambda-example as /tmp/samcli/source:ro,delegated inside runtime container
 
 Build Succeeded
 
@@ -347,7 +347,7 @@ Which returns:
 Uploading to 2adfa5ddb62b541b7cf323cda43ee394 8523862 / 8523862.0 (100.00%) 
 Successfully packaged artifacts and wrote output template to file out.yml.
 Execute the following command to deploy the packaged template
-sam deploy --template-file /path/to/fastapi-aws-lambda-example/out.yml --stack-name <YOUR STACK NAME>
+sam deploy --template-file /path/to/FastAPI-aws-lambda-example/out.yml --stack-name <YOUR STACK NAME>
 ```
 Now the application is packaged and a final template has been created that will now be used to tell AWS Cloudformation where the package is.
 
@@ -420,4 +420,4 @@ From now on every time you commit changes to your repository `master` branch, it
 5. We learned about AWS SAM and how to deploy an application from your machine
 6. We learned how to use Travis for continuous deployment of the said application instead of doing it manually
 
-If you have any questions feel free to reach out to me in the [example repository](https://github.com/iwpnd/fastapi-aws-lambda-example) or via mail.
+If you have any questions feel free to reach out to me in the [example repository](https://github.com/iwpnd/FastAPI-aws-lambda-example) or via mail.

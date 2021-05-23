@@ -7,7 +7,7 @@ date: 2020-01-28 13:37:00 +0200
 # toc: true
 ---
 
-My last [article on fastAPI](https://iwpnd.pw/articles/2020-01/deploy-fastapi-to-aws-lambda) was the most-viewed article by now, but at the same time the article I had to update the most due to typos and grammatical errors. Sure you can write you texts in something like Pages, or Word, and copy them over to markdown afterward, or save them as markdown (apparently [this](http://www.writage.com/) is a thing now). 
+My last [article on FastAPI](https://iwpnd.pw/articles/2020-01/deploy-FastAPI-to-aws-lambda) was the most-viewed article by now, but at the same time the article I had to update the most due to typos and grammatical errors. Sure you can write you texts in something like Pages, or Word, and copy them over to markdown afterward, or save them as markdown (apparently [this](http://www.writage.com/) is a thing now). 
 I for one like to write directly in my editor of choice which is VSCode, even though it does not come with spell-checking batteries included. So you could resort back to Grammarly to do the spell-checking for you, but you would still have to copy and paste the text over to from Grammarly and back into your editor. Naah!
 
 Luckily for people like me, there are people out there that have our back on this. Folks like [@znck](https://znck.dev/) who felt the same, reverse-engineered the Grammarly client and build a [VSCode extension](https://marketplace.visualstudio.com/items?itemName=znck.grammarly) to fulfill my every spell-checking need.

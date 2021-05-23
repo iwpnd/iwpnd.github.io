@@ -1,8 +1,8 @@
 ---
 layout: post
 title: Apache Kafka producer and consumer with FastAPI and aiokafka
-tags: [python, kafka, fastapi]
-categories: python kafka fastapi
+tags: [python, kafka, FastAPI]
+categories: python kafka FastAPI
 date: 2020-03-11 13:37:00 +0200
 toc: true
 ---
@@ -23,7 +23,7 @@ To zoom in on the magic part, when a producer sends a message, the message is pu
 
 
 <p align="center">
-<img src="/img/2020-03-geostream-kafka/kafka.png" alt="setup geostream fastapi aiokafka">
+<img src="/img/2020-03-geostream-kafka/kafka.png" alt="setup geostream FastAPI aiokafka">
 </p>
 
 
@@ -37,7 +37,7 @@ Okay, we have the theory let's build something with it. This time, instead of a 
 
 
 <p align="center">
-<img src="/img/2020-03-geostream-kafka/geostream-fastapi-kafka.png" alt="setup geostream fastapi aiokafka">
+<img src="/img/2020-03-geostream-kafka/geostream-FastAPI-kafka.png" alt="setup geostream FastAPI aiokafka">
 </p>
 
 ## Setup an Apache Kafka cluster
@@ -108,7 +108,7 @@ If you see your consumer printing out what the producer is pushing, you're good 
 
 ## FastAPI Apache Kafka producer
 
-As shown in my sketch I want to wrap the producer into a [FastAPI](https://fastapi.tiangolo.com/) endpoint. This allows for more than one entity at a time to produce messages to a topic, but also enables me to flexibly change topics that I want to produce messages to with [FastAPI](https://fastapi.tiangolo.com/tutorial/path-params-numeric-validations/) endpoint path parameters. I opted to use [aiokafka](https://github.com/aio-libs/aiokafka) instead of pykafka to make use of FastAPIs async capabilities, but also to plague myself and get a better understanding of async programming (still pending).
+As shown in my sketch I want to wrap the producer into a [FastAPI](https://FastAPI.tiangolo.com/) endpoint. This allows for more than one entity at a time to produce messages to a topic, but also enables me to flexibly change topics that I want to produce messages to with [FastAPI](https://FastAPI.tiangolo.com/tutorial/path-params-numeric-validations/) endpoint path parameters. I opted to use [aiokafka](https://github.com/aio-libs/aiokafka) instead of pykafka to make use of FastAPIs async capabilities, but also to plague myself and get a better understanding of async programming (still pending).
 
 FastAPIs `on_event("startup)` and `on_event("shutdown")` make the use of a aiokafka producer easy.
 
@@ -158,7 +158,7 @@ def get_messages(topicname):
 This way we can in the Leaflet application we can add an [EventSource and an EventListener](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) that would take incoming events and do something with it - exactly as we wanted it to be in the first place (see architecture).
 I was not able to do the same with FastAPI and an async generator. That is not to say it is not possible, but my dumb ass wasn't able to figure out how and didn't bother to open an issue with FastAPI.
 
-What I did figure out, however, is that there is a beautiful thing called [Websockets](https://fastapi.tiangolo.com/advanced/websockets/) and that FastAPI happily supports the likes. Since FastAPI is built on-top of starlette we can use class-basedd endpoints and especially the [WebsocketEndpoint](https://www.starlette.io/endpoints/#websocketendpoint) to handle incoming `Websocket` Sessions.
+What I did figure out, however, is that there is a beautiful thing called [Websockets](https://FastAPI.tiangolo.com/advanced/websockets/) and that FastAPI happily supports the likes. Since FastAPI is built on-top of starlette we can use class-basedd endpoints and especially the [WebsocketEndpoint](https://www.starlette.io/endpoints/#websocketendpoint) to handle incoming `Websocket` Sessions.
 
 ```python
 @app.websocket_route("/consumer/{topicname}")

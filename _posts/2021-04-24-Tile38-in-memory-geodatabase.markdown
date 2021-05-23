@@ -7,6 +7,10 @@ date: 2021-04-24 13:37:00 +0200
 toc: true
 ---
 
+<p align="center">
+<img src="/img/2021-04-tile38/tile38banner.png" alt="tile38banner">
+</p>
+
 For the longest time, it was everything about PostgreSQL and PostGIS. Building something that only remotely has to handle geo-data I had PostGIS on speed-dial. Requirement analysis of what I needed from the vastness of functionality that PostGIS packs? Nope. Never. Really.
 What it mostly boiled down to were point-in-polygon, radius searches and if generous a KNN nearby search for either points or polygons. Do you need to use PostGIS for that? Well, if you have a bunch of points or a bunch of polygons I would do best to consider PostGIS for geo-indexed searches. That is until a friend introduced me to Tile38.
 

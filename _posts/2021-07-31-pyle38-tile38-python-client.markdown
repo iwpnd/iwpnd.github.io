@@ -7,7 +7,7 @@ date: 2021-07-31 13:37:00 +0200
 ---
 
 <p align="center">
-<img src="/img/2021-07-21-pyle38/pyle38.png" alt="pyle38">
+<img src="/img/2021-07-31-pyle38/pyle38.png" alt="pyle38">
 </p>
 
 Back in May I wrote an introductory blog post about [Tile38](https://iwpnd.pw/articles/2021-04/Tile38-in-memory-geodatabase). Professionally I work with Tile38 in

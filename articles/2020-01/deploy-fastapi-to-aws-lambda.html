@@ -1,0 +1,257 @@
+<!DOCTYPE html><html lang="en" ><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Jekyll v4.2.2" /><meta property="og:title" content="How to continuously deploy a FastAPI to AWS Lambda with AWS SAM" /><meta name="author" content="iwpnd" /><meta property="og:locale" content="en_US" /><meta name="description" content="My last article about FastAPI was supposed to be an article about how to deploy a FastAPI on a budget, but instead turned out to be an opinion on FastAPI and I left it at that. Let’s change that." /><meta property="og:description" content="My last article about FastAPI was supposed to be an article about how to deploy a FastAPI on a budget, but instead turned out to be an opinion on FastAPI and I left it at that. Let’s change that." /><link rel="canonical" href="https://iwpnd.pw//articles/2020-01/deploy-fastapi-to-aws-lambda" /><meta property="og:url" content="https://iwpnd.pw//articles/2020-01/deploy-fastapi-to-aws-lambda" /><meta property="og:site_name" content="iwpnd" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2020-01-21T11:37:00+00:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="How to continuously deploy a FastAPI to AWS Lambda with AWS SAM" /><meta name="twitter:site" content="@imwithpanda" /><meta name="twitter:creator" content="@imwithpanda" /> <script type="application/ld+json"> {"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"iwpnd"},"dateModified":"2020-01-21T11:37:00+00:00","datePublished":"2020-01-21T11:37:00+00:00","description":"My last article about FastAPI was supposed to be an article about how to deploy a FastAPI on a budget, but instead turned out to be an opinion on FastAPI and I left it at that. Let’s change that.","headline":"How to continuously deploy a FastAPI to AWS Lambda with AWS SAM","mainEntityOfPage":{"@type":"WebPage","@id":"https://iwpnd.pw//articles/2020-01/deploy-fastapi-to-aws-lambda"},"url":"https://iwpnd.pw//articles/2020-01/deploy-fastapi-to-aws-lambda"}</script><title> How to continuously deploy a FastAPI to AWS Lambda with AWS SAM - iwpnd</title><link rel="shortcut icon" href="/favicon.png"><link rel="alternate" type="application/atom+xml" title="iwpnd" href="/atom.xml"><link rel="alternate" type="application/json" title="iwpnd" href="https://iwpnd.pw//feed.json" /><link rel="sitemap" type="application/xml" title="sitemap" href="/sitemap.xml" /><style> *,:after,:before{box-sizing:border-box;background-color:inherit;color:inherit;margin:0;padding:0}body{font-family:system-ui, sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;line-height:1.5;font-size:1rem;color:#16171a}nav ul{border-right:1px solid #edf2f7}a{color:#000;text-decoration-skip-ink:auto;text-decoration:underline}pre{margin:.5rem 0;padding:.5rem}.post p{margin:.5rem 0}.post h1,.post h2,.post h3,.post h4{margin:1rem 0}.post h2:first-child,.project h2:first-child,.photo h2:first-child{margin-top:0}.meta{margin:2rem 0}code{padding:.1rem}pre code{border:none}pre{padding:1rem;overflow-x:auto}img{max-width:100%}hr{background:#000;height:1px;border:0}header{flex-basis:10rem;flex-grow:1;position:relative}header a{text-decoration:none}header li{margin-bottom:.2rem;text-align:right;margin-right:2rem}header a.active{font-weight:bold}header,section{padding:1rem}blockquote{font-style:italic;border-left:5px solid #ececec;padding-left:1rem}h1,h2,h3,h4,h5{line-height:1;margin:1rem 0;font-weight:600}section h1:first-child{margin-top:0}strong,b{font-weight:bold}.photos ul{list-style:none}.photos li{margin-bottom:1.5rem}.photo picture,.project picture{margin-bottom:0.5rem}.posts ul,header ul{list-style:none}.posts li{align-items:center;display:flex;justify-content:space-between;margin-bottom:.5rem}.posts li a,.posts li div,.projects li a{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none}.posts li time,.projects li time{padding-left:1rem;white-space:nowrap;font-variant-numeric:tabular-nums}main{display:flex;flex-wrap:wrap;max-width:60rem;margin:2rem auto;padding:1rem}@media screen and (max-width: 45rem){header li{display:inline;margin-right:1rem}.logo{padding-bottom:1rem}header ul{border-bottom:1px solid #edf2f7;padding-bottom:2rem}nav ul{border-right:0px}.photos ul{margin-top:0.5rem}}section{flex-basis:0;flex-grow:999;min-width:70%;display:flex;flex-direction:column}figcaption{font-size:smaller}.highlight{background:#282a36;color:#f8f8f2;font-size:.8rem}.highlight .hll,.highlight .s,.highlight .sa,.highlight .sb,.highlight .sc,.highlight .dl,.highlight .sd,.highlight .s2,.highlight .se,.highlight .sh,.highlight .si,.highlight .sx,.highlight .sr,.highlight .s1,.highlight .ss{color:#f1fa8c}.highlight .go{color:#44475a}.highlight .err,.highlight .g,.highlight .l,.highlight .n,.highlight .x,.highlight .p,.highlight .ge,.highlight .gr,.highlight .gh,.highlight .gi,.highlight .gp,.highlight .gs,.highlight .gu,.highlight .gt,.highlight .ld,.highlight .no,.highlight .nd,.highlight .ni,.highlight .ne,.highlight .nn,.highlight .nx,.highlight .py,.highlight .w,.highlight .bp{color:#f8f8f2}.highlight .gh,.highlight .gi,.highlight .gu{font-weight:bold}.highlight .ge{text-decoration:underline}.highlight .bp{font-style:italic}.highlight .c,.highlight .ch,.highlight .cm,.highlight .cpf,.highlight .c1,.highlight .cs{color:#6272a4}.highlight .kd,.highlight .kt,.highlight .nb,.highlight .nl,.highlight .nv,.highlight .vc,.highlight .vg,.highlight .vi,.highlight .vm{color:#8be9fd}.highlight .kd,.highlight .nb,.highlight .nl,.highlight .nv,.highlight .vc,.highlight .vg,.highlight .vi,.highlight .vm{font-style:italic}.highlight .na,.highlight .nc,.highlight .nf,.highlight .fm{color:#50fa7b}.highlight .k,.highlight .o,.highlight .cp,.highlight .kc,.highlight .kn,.highlight .kp,.highlight .kr,.highlight .nt,.highlight .ow{color:#ff79c6}.highlight .m,.highlight .mb,.highlight .mf,.highlight .mh,.highlight .mi,.highlight .mo,.highlight .il{color:#bd93f9}.highlight .gd{color:#f55}</style></head><body><main role="main"><header role="banner"> <img src="/img/iwpnd-logo.png" alt="iwpnd logo"><nav role="navigation"><ul><li><a href="/" >blog</a></li><li><a href="/til" >til</a></li><li><a href="/about" >about</a></li><li><a href="/search" >search</a></li><li><a href="/imprint" >imprint</a></li></ul></nav></header><script async src="https://www.googletagmanager.com/gtag/js?id=UA-156087226-1"></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'UA-156087226-1'); </script><section class="post"><h2>How to continuously deploy a FastAPI to AWS Lambda with AWS SAM</h2><p>My last <a href="https://iwpnd.pw/articles/2020-01/opinion-on-FastAPI">article about FastAPI</a> was supposed to be an article about how to deploy a FastAPI on a budget, but instead turned out to be an opinion on FastAPI and I left it at that. Let’s change that.</p><p>FastAPIs <a href="https://FastAPI.tiangolo.com/">documentation</a> is exhaustive on all accounts. It gets you started real quick, takes you by the hand if it gets more complicated and even describes features in detail when it doesn’t have to. I like it. Where it falls short, however, is when it comes to <a href="https://FastAPI.tiangolo.com/deployment/">deployment</a>. That’s probably because there are gazillions of ways to deploy an API. The documentation proposes to use <a href="https://docker.com/">Docker</a> and while I understand that this is the way to go for most companies and most applications, I don’t see why I would want to deploy a small application with a few undemanding endpoints to a Docker Swarm or even Kubernetes cluster. Those come with a (hefty) price tag and are not interesting for the private person who just wants to get his hand dirty on FastAPI a little.</p><p>So let’s use this article to start over and learn how to set up a basic continuous deployment pipeline for a FastAPI app on a budget. We will be using <a href="https://aws.amazon.com/api-gateway/">AWS API Gateway</a>, <a href="https://aws.amazon.com/lambda/">AWS Lambda</a> the serverless computing services by AWS and <a href="https://travis-ci.com/">Travis</a>. Both AWS Lambda and AWS API Gateway are billed per API call and by the amount of data that you transfer. If you’re still eligible for the free tier of AWS you can use those two services completely free for the scope of this tutorial. If not refer to the pricing example of <a href="https://aws.amazon.com/api-gateway/pricing/#Pricing_Examples">AWS API Gateway</a> and <a href="https://aws.amazon.com/lambda/pricing/">AWS Lambda</a>. Take a particularly detailed look at the AWS Lambda pricing as this depends on the time your application is running and the memory size that is provisioned to the AWS Lambda. Luckily AWS finally shed some transparency on that matter with a proper <a href="https://aws.amazon.com/lambda/pricing/#Calculator">calculator</a>.</p><h2 id="prerequisites">prerequisites</h2><p>Let’s assume that you already have registered an <a href="https://aws.amazon.com/free">AWS account</a>, set up a user other than <code class="language-plaintext highlighter-rouge">root</code> and have installed and configured <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html">AWS CLI</a> properly. The latter is not a requirement, as you do everything we do in the AWS console, yet it’s not a bad idea to learn the AWS CLI anyways.</p><h3 id="setup-a-new-role-for-aws-lambda-to-assume">Setup a new role for AWS Lambda to assume</h3><p>First, we set up a role that the AWS Lambda will assume within our AWS account. Roles are AWSs way to enforce the <a href="https://en.wikipedia.org/wiki/Principle_of_least_privilege">principle of least privilege</a> when it comes to the resources an AWS Lambda can execute or have access to. Go to the <a href="https://console.aws.amazon.com/iam/">IAM console</a>, select <em>Roles</em> and <em>Create</em>. That’ll take you into the <em>Role creation</em> screen where you will choose an <em>AWS service</em> as the trusted entity and select <em>Lambda</em> as the service that will use the role we’re going to create. Press next and it’ll take you to the <em>Permissions</em> tab. Here you can either create a permission policy from scratch or select one of the existing ones. Keep in mind that the permissions vary depending on the purpose of the Lambda function. We’ll take an existing permission for now. Search for <code class="language-plaintext highlighter-rouge">lambda</code> and select the <code class="language-plaintext highlighter-rouge">AWSLambdaBasicExecutionRole</code> which only allows our Lambda to write logs to AWS Cloudwatch. Press next, give it a tag or don’t and press <em>Review</em>. Now you’re prompted to give it a name. Choose a meaningful name (e.g. fastapilambdarole) and continue to create the role, which takes you back to <em>Roles</em> where you click your newly created role and mark down the Role ARN (<a href="https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html">Amazon Resource Name</a>).</p><h3 id="setup-an-aws-s3-bucket">Setup an AWS S3 bucket</h3><p>For small applications that only use vanilla python without external libraries, one could quickly copy and paste the code into the AWS Lambda console. Bigger applications that use third-party libraries, however, will either be uploaded as a zip file or in our case, we will provide the location of our deployment package as an AWS S3 bucket. If you have AWS CLI properly setup you can create a bucket with:</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws s3api create-bucket \
+--bucket my-travis-deployment-bucket \
+--region eu-west-1 \
+--create-bucket-configuration LocationConstraint=eu-west-1
+</code></pre></div></div><p>Otherwise, you navigate to the <a href="https://s3.console.aws.amazon.com/s3/">S3 console</a> and create one there.</p><h3 id="setup-a-travis-user-in-aws">Setup a Travis User in AWS</h3><p>Next up we create a new AWS user that Travis can use to perform actions on AWS resources on our behalf. We could just use our encrypted credentials and secret, but a) spider-senses intensify b) we follow the principle of least privilege again. If Travis does not need the rights to summon the mighty <a href="https://aws.amazon.com/ec2/instance-types/p3/">p3dn.24xlarge</a>, Travis will stick to creating AWS Lambdas. First, we will create a new policy. This time we have to be more specific because we need Travis to have access to AWS S3 for the deployment package, AWS Cloudformation to build our API stack, API Gateway, and AWS Lambda. You can do it in the AWS console or with AWS CLI (<a href="https://docs.aws.amazon.com/cli/latest/reference/iam/create-policy.html">see here</a>). Use this policy for the example:</p><details> <summary><div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+ </span><span class="nl">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span><span class="w">
+ </span><span class="nl">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AllowListBucket"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"s3:ListBucket"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+ </span><span class="p">[</span><span class="err">...</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div></summary><div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+ </span><span class="nl">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AllowListBucket"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"s3:ListBucket"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"arn:aws:s3:::my-travis-deployment-bucket"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AllowPassLambdaRole"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"iam:PassRole"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"arn:aws:iam::&lt;your-account-id-here&gt;:role/fastapilambdarole"</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AllowS3Actions"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"s3:PutObject"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"s3:GetObjectAcl"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"s3:GetObject"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"s3:DeleteObject"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"s3:PutObjectAcl"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:s3:::my-travis-deployment-bucket/*"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AllowLambda"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"lambda:*"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AllowListPolicies"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"iam:ListPolicies"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AllowApiGateway"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"apigateway:*"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AllowCloudFormation"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"cloudformation:*"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+ 
+</span></code></pre></div></div></details><p>Continuing, you go to the <a href="https://console.aws.amazon.com/iam/">IAM console</a>, but this time you will create a user with <em>programmatic access</em> and a meaningful name such as <code class="language-plaintext highlighter-rouge">travisdeploymentuser</code> or the likes. Now we attach the policy we just created to the Travis user. We get prompted with the <code class="language-plaintext highlighter-rouge">AWS-ACCESS-KEY-ID</code> and the <code class="language-plaintext highlighter-rouge">AWS-SECRET-ACCESS-KEY</code> of the user. Note those down for now. Done.</p><h2 id="the-example-application">The example application</h2><p>For the sake of this tutorial, I created a <a href="https://github.com/iwpnd/FastAPI-aws-lambda-example">Github repository</a> with an example application that you can use as a first step and to/or built on top.</p><h3 id="application-structure">Application structure</h3><p>Inspired by the <a href="https://github.com/nsidnev/FastAPI-realworld-example-app">FastAPI-realworld-example-app</a>, I neatly separated the pydantic models, the configuration, the endpoints, and the routers.</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.
+├── Dockerfile
+├── LICENSE
+├── README.md
+├── example_app
+│ ├── __init__.py
+│ ├── api
+│ │ ├── __init__.py
+│ │ └── api_v1
+│ │ ├── __init__.py
+│ │ ├── api.py
+│ │ └── endpoints
+│ │ ├── __init__.py
+│ │ └── example.py
+│ ├── core
+│ │ ├── __init__.py
+│ │ ├── config.py
+│ │ └── models
+│ │ ├── input.py
+│ │ └── output.py
+│ └── main.py
+├── requirements.txt
+├── scripts
+│ └── example.ipynb
+├── setup.py
+├── template.yml
+├── .travis.yml
+├── .pre-commit-config.yaml
+├── tests
+│ ├── __init__.py
+│ ├── test_example_endpoint.py
+│ └── test_ping.py
+</code></pre></div></div><p>For simplicities sake, we have exactly two endpoints. One is <code class="language-plaintext highlighter-rouge">/ping</code> in <code class="language-plaintext highlighter-rouge">main.py</code> and the other is <code class="language-plaintext highlighter-rouge">/api/v1/example</code> that takes two integer values and returns their product. If you want you can expand this functionality with your pedantic models and additional routes. I also already included a <code class="language-plaintext highlighter-rouge">.pre-commit-configuration.yaml</code> for you to start using <a href="https://iwpnd.pw/articles/2020-01/pre-commit-to-the-rescue">pre-commit</a> right away. It comes with pre-configured hook for <a href="https://iwpnd.pw/articles/2020-01/black-python-code-formatter">black</a>.</p><h3 id="test-the-application-locally">Test the application locally</h3><p>To test the example application locally we have a couple of options. One is by cloning the <a href="https://github.com/iwpnd/FastAPI-aws-lambda-example">repository</a> and starting it locally with uvicorn. The other is to build a docker image from the <code class="language-plaintext highlighter-rouge">Dockerfile</code> in the repository and expose the app from within a container.</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/iwpnd/FastAPI-aws-lambda-example
+cd FastAPI-aws-lambda-example
+# create and activate a virtual environment
+pip install -e .
+pip install uvicorn # or anything else that can handle ASGI
+pytest . -v
+uvicorn example_app.main:app --host 0.0.0.0 --port 8080 --reload
+</code></pre></div></div><p>Or</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker build -t example_app_image .
+docker run -p 8080:8080 -name example-app-container example_app_image
+</code></pre></div></div><p>No matter what you choose you can now go to your browser and check the documentation of the application via <a href="http://localhost:8000/docs">http://localhost:8080/docs</a> and test the API through the Swagger UI right there.</p><h2 id="wrap-the-application-with-mangum">Wrap the application with Mangum</h2><p>For this application to run with AWS Lambda &amp; AWS API Gateway, we have to wrap it with <a href="https://github.com/erm/mangum">Mangum</a>. Mangum works as an adapter for <a href="https://asgi.readthedocs.io/en/latest/introduction.html">ASGI applications</a> like the ones you can create with FastAPI so that they can send and receive information from API Gateway to Lambda and vice versa.</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">FastAPI</span> <span class="kn">import</span> <span class="n">FastAPI</span>
+<span class="kn">from</span> <span class="nn">example_app.api.api_v1.api</span> <span class="kn">import</span> <span class="n">router</span> <span class="k">as</span> <span class="n">api_router</span>
+<span class="kn">from</span> <span class="nn">example_app.core.config</span> <span class="kn">import</span> <span class="n">API_V1_STR</span><span class="p">,</span> <span class="n">PROJECT_NAME</span>
+<span class="kn">from</span> <span class="nn">mangum</span> <span class="kn">import</span> <span class="n">Mangum</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">PROJECT_NAME</span><span class="p">)</span>
+<span class="n">app</span><span class="p">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">api_router</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="n">API_V1_STR</span><span class="p">)</span>
+
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"/ping"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">pong</span><span class="p">():</span>
+    <span class="s">"""
+    Sanity check.
+
+    This will let the user know that the service is operational.
+
+    And this path operation will:
+    * show a life sign
+
+    """</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">"ping"</span><span class="p">:</span> <span class="s">"pong!"</span><span class="p">}</span>
+
+
+<span class="n">handler</span> <span class="o">=</span> <span class="n">Mangum</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">enable_lifespan</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</code></pre></div></div><h3 id="the-aws-lambda-handler">The AWS Lambda handler</h3><p>The handler is necessary for AWS Lambda for it is the function that AWS Lambda can invoke when the service executes your code. It follows a simple syntax:</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">your_module</span> <span class="kn">import</span> <span class="n">Yourclass</span>
+<span class="kn">from</span> <span class="nn">your_database</span> <span class="kn">import</span> <span class="n">database</span>
+
+<span class="n">db</span> <span class="o">=</span> <span class="n">database</span><span class="p">.</span><span class="n">connect</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">Yourclass</span><span class="p">(</span>
+        <span class="n">text</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s">"message"</span><span class="p">],</span>
+        <span class="n">connection</span><span class="o">=</span><span class="n">db</span><span class="p">.</span><span class="n">connection</span>
+        <span class="p">)</span>
+    <span class="n">msg</span><span class="p">.</span><span class="n">build</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">msg</span><span class="p">.</span><span class="n">transformed</span>
+</code></pre></div></div><p>You can import your libraries, like <code class="language-plaintext highlighter-rouge">your_module</code> or <code class="language-plaintext highlighter-rouge">your_database</code> and you can create variables or database connections. Everything outside of the <code class="language-plaintext highlighter-rouge">handler</code> function will execute when the AWS Lambda is provisioned. After that, you can use it within the <code class="language-plaintext highlighter-rouge">handler</code> that AWS Lambda will use on consecutive calls. The <code class="language-plaintext highlighter-rouge">event</code> is what AWS Lambda uses to pass in event data to the <code class="language-plaintext highlighter-rouge">handler</code>. The <code class="language-plaintext highlighter-rouge">context</code> on the other hand provides information about the invocation, function, and execution environment (see <a href="https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html">docs</a> for more details).</p><h3 id="mangum-as-the-handler-for-event-and-context">Mangum as the handler for event and context</h3><p>A FastAPI application does not have a handler, so that’s what <a href="https://github.com/erm/mangum">Mangum</a> is for. It wraps the <code class="language-plaintext highlighter-rouge">app</code>, therefore it will receive <code class="language-plaintext highlighter-rouge">event</code> and <code class="language-plaintext highlighter-rouge">context</code> in an AWS Lambda execution environment and will pass those on to the <code class="language-plaintext highlighter-rouge">app</code> itself. For this to work we have to setup AWS API Gateway proxy integration to pass the raw request to the AWS Lambda, and let the <code class="language-plaintext highlighter-rouge">app</code> decide on how to process the information and what to return, including 404s, etc. This is what allows this setup in the first place.</p><h2 id="deploy-with-aws-sam">Deploy with AWS SAM</h2><p>To deploy the AWS Lambda function we have now built, we will use the AWS Serverless Application Model (<a href="https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html">AWS SAM</a>, an open-source framework to build serverless applications. As an extension to <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html">AWS Cloudformation</a> it integrates nicely with all the other AWS services we need and lets us build our infrastructure from code - the <code class="language-plaintext highlighter-rouge">template.yml</code> in the <a href="[repository](https://github.com/iwpnd/FastAPI-aws-lambda-example)">repository</a>.</p><div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">AWSTemplateFormatVersion</span><span class="pi">:</span> <span class="s1">'</span><span class="s">2010-09-09'</span>
+<span class="na">Transform</span><span class="pi">:</span> <span class="s">AWS::Serverless-2016-10-31</span>
+<span class="na">Description</span><span class="pi">:</span> <span class="pi">&gt;</span>
+    <span class="s">FastAPI aws lambda example</span>
+<span class="na">Resources</span><span class="pi">:</span>
+    <span class="na">FastapiExampleLambda</span><span class="pi">:</span>
+        <span class="na">Type</span><span class="pi">:</span> <span class="s">AWS::Serverless::Function</span>
+        <span class="na">Properties</span><span class="pi">:</span>
+            <span class="na">Events</span><span class="pi">:</span>
+                <span class="na">ApiEvent</span><span class="pi">:</span>
+                    <span class="na">Properties</span><span class="pi">:</span>
+                        <span class="na">RestApiId</span><span class="pi">:</span>
+                            <span class="na">Ref</span><span class="pi">:</span> <span class="s">FastapiExampleGateway</span>
+                        <span class="na">Path</span><span class="pi">:</span> <span class="s">/{proxy+}</span>
+                        <span class="na">Method</span><span class="pi">:</span> <span class="s">ANY</span>
+                    <span class="na">Type</span><span class="pi">:</span> <span class="s">Api</span>
+            <span class="na">FunctionName</span><span class="pi">:</span> <span class="s">FastAPI-lambda-example</span>
+            <span class="na">CodeUri</span><span class="pi">:</span> <span class="s">./</span>
+            <span class="na">Handler</span><span class="pi">:</span> <span class="s">example_app.main.handler</span>
+            <span class="na">Runtime</span><span class="pi">:</span> <span class="s">python3.7</span>
+            <span class="na">Timeout</span><span class="pi">:</span> <span class="m">300</span> <span class="c1"># timeout of your lambda function</span>
+            <span class="na">MemorySize</span><span class="pi">:</span> <span class="m">128</span> <span class="c1"># memory size of your lambda function</span>
+            <span class="na">Description</span><span class="pi">:</span> <span class="s">FastAPI aws lambda example</span>
+            <span class="c1"># other options, see -&gt;</span>
+            <span class="c1"># https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-specification-template-anatomy-globals.html#sam-specification-template-anatomy-globals-supported-resources-and-properties</span>
+            <span class="na">Role</span><span class="pi">:</span> <span class="kt">!Sub</span> <span class="s">arn:aws:iam::${AWS::AccountId}:role/fastapilambdarole</span>
+
+    <span class="na">FastapiExampleGateway</span><span class="pi">:</span>
+        <span class="na">Type</span><span class="pi">:</span> <span class="s">AWS::Serverless::Api</span>
+        <span class="na">Properties</span><span class="pi">:</span>
+            <span class="na">StageName</span><span class="pi">:</span> <span class="s">prod</span>
+            <span class="na">OpenApiVersion</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3.0.0'</span>
+
+</code></pre></div></div><p>There are some things we have to unpack here. What we do is, we tell AWS Cloudformation to provision resources on our behalf and to deploy them in a stack. In the <em>Resources</em> section you see the API Gateway first, then the Lambda function we want to build from the code in the <em>CodeUri</em> with the <code class="language-plaintext highlighter-rouge">handler</code> in <em>Handler</em>. We define the <em>Runtime</em> of the Lambda, as well as <em>MemorySize</em> and <em>Timeout</em>. You need to attach the proper role in the <em>Role</em> section, that we have created earlier. In the <em>Events</em> section we tell AWS Cloudformation to use <code class="language-plaintext highlighter-rouge">FastapiExampleGateway</code> as the API Gateway with <code class="language-plaintext highlighter-rouge">{proxy+}</code> integration, because as you recall that’s what makes this setup work in the first place. Check out the official <a href="https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-specification-template-anatomy.html">Template Anatomy</a> to get a better understanding of other options available.</p><p>Once set up, you can now deploy the <a href="[repository](https://github.com/iwpnd/FastAPI-aws-lambda-example)">FastAPI-aws-lambda-example application</a> from your local machine, through the <code class="language-plaintext highlighter-rouge">template</code> that tells AWS Cloudformation to build a stack and provision the resources necessary.</p><h3 id="1-stage-validate-the-sam-template">1. Stage: Validate the SAM template</h3><p>The first thing we do is to validate the SAM template to check if the YAML we provide is valid.</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sam validate
+</code></pre></div></div><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2020-01-21 10:28:39 Found credentials in environment variables.
+/path/to/FastAPI-aws-lambda-example/template.yml is a valid SAM Template
+</code></pre></div></div><h3 id="2-stage-build-the-deployment-package">2. Stage: Build the deployment package</h3><p>Next up, we build the deployment package. If your application depends on packages that have natively compiled programs you pass <code class="language-plaintext highlighter-rouge">--use-container</code> and SAM will attempt to build the application in a Docker container using based on <a href="https://github.com/lambci">LambCI</a>. Optionally you can see what’s happening in the container if you also pass the <code class="language-plaintext highlighter-rouge">--debug</code> flag.</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sam build --use-container --debug
+</code></pre></div></div><p>This will build the deployment package and store it in <code class="language-plaintext highlighter-rouge">.aws-sam/build</code> along with a new <code class="language-plaintext highlighter-rouge">template.yaml</code> that now also contains the values we <code class="language-plaintext highlighter-rouge">!Sub</code> ‘ed or substituted like so <code class="language-plaintext highlighter-rouge">${AWS::AccountId}</code>, in the initial template.</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Starting Build inside a container
+Building resource 'FastapiExampleLambda'
+
+Fetching lambci/lambda:build-python3.7 Docker container image......
+Mounting /path/to/FastAPI-aws-lambda-example as /tmp/samcli/source:ro,delegated inside runtime container
+
+Build Succeeded
+
+Built Artifacts : .aws-sam/build
+Built Template : .aws-sam/build/template.yaml
+
+Commands you can use next
+=========================
+[*] Invoke Function: sam local invoke
+[*] Package: sam package --s3-bucket &lt;yourbucket&gt;
+
+Running PythonPipBuilder:ResolveDependencies
+Running PythonPipBuilder:CopySource
+</code></pre></div></div><h3 id="3-stage-package-the-application">3. Stage: Package the application</h3><p>Up next, packaging. As stated in the beginning, when an application in an AWS Lambda exceeds a certain size or has dependencies, we have to package the application and either upload it in the AWS console or prepare an intermediate AWS S3 bucket and let AWS Lambda get the application package from there. AWS SAM requires you to do the latter, or better, does it for you if you provision a bucket and pass it with <code class="language-plaintext highlighter-rouge">--s3-bucket my-travis-deployment-bucket</code>.</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sam package --s3-bucket my-travis-deployment-bucket --output-template-file out.yml --region eu-west-1
+</code></pre></div></div><p>Which returns:</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2020-01-21 10:48:12 Found credentials in environment variables.
+Uploading to 2adfa5ddb62b541b7cf323cda43ee394 8523862 / 8523862.0 (100.00%) 
+Successfully packaged artifacts and wrote output template to file out.yml.
+Execute the following command to deploy the packaged template
+sam deploy --template-file /path/to/FastAPI-aws-lambda-example/out.yml --stack-name &lt;YOUR STACK NAME&gt;
+</code></pre></div></div><p>Now the application is packaged and a final template has been created that will now be used to tell AWS Cloudformation where the package is.</p><h3 id="4-stage-deploy-the-application">4. Stage: Deploy the application</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sam deploy --template-file out.yml --stack-name example-stack-name --region eu-west-1 --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM
+</code></pre></div></div><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Waiting for stack create/update to complete
+Successfully created/updated stack - example-stack-name
+</code></pre></div></div><p>This last step will finally deploy the application <code class="language-plaintext highlighter-rouge">--stack-name</code> to a <code class="language-plaintext highlighter-rouge">--region</code>. Important to note here is the option <code class="language-plaintext highlighter-rouge">--no-fail-on-empty-changeset</code>. Deploying a new version of your application code does not change the stack itself. So running the command without this option will fail. With this, you can, however, push consecutive updates of your codes to the same stack.</p><p>If you now go to the <a href="https://eu-west-1.console.aws.amazon.com/apigateway/main/apis?region=eu-west-1">API Gateway Console</a> you will see your API deployed to the <code class="language-plaintext highlighter-rouge">prod</code> stage at <a href="">https://xxxxxxxxxx.execute-api.eu-west-1.amazonaws.com/prod</a>.</p><h2 id="continuous-deployment-with-travis">Continuous deployment with Travis</h2><p>Now for the last part, the continuous deployment through Github and Travis. The idea is that any code commit that passes an automated testing phase is automatically released into the production environment, and is accessible by the user. This means that the stages we laid out above, will no longer be executed manually by you, but instead in a Travis CI pipeline. Aight, let’se go.</p><ol><li>Go to <a href="https://travis-ci.com/">https://travis-ci.com/</a> and sign up with your GitHub account.</li><li>Accept the Authorization of Travis CI and you’ll be redirected to GitHub.</li><li>Click on your profile picture in the top right of your Travis Dashboard, click the green Activate button, and select the repositories you want to use with Travis CI.</li><li>Select the repository of your application</li><li>Encrypt your <code class="language-plaintext highlighter-rouge">AWS-ACCESS-KEY-ID</code> and your <code class="language-plaintext highlighter-rouge">AWS-SECRET-ACCESS-KEY</code> of the <code class="language-plaintext highlighter-rouge">travisdeploymentuser</code> we created at the beginning like <a href="https://docs.travis-ci.com/user/encryption-keys#usage">this</a>, and put those in the .travis.yml file</li><li>Commit the .travis.yml file to your repository and check your build process in the <a href="https://travis-ci.com/dashboard">Travis dashboard</a>.</li></ol><div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">language</span><span class="pi">:</span> <span class="s">python</span>
+<span class="na">cache</span><span class="pi">:</span> <span class="s">pip</span>
+<span class="na">python</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="s1">'</span><span class="s">3.7'</span>
+<span class="na">install</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="s">pip install awscli</span>
+<span class="pi">-</span> <span class="s">pip install aws-sam-cli</span>
+<span class="na">jobs</span><span class="pi">:</span>
+  <span class="na">include</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">stage</span><span class="pi">:</span> <span class="s">test</span>
+      <span class="na">script</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="s">pip install pytest</span>
+        <span class="pi">-</span> <span class="s">pip install -e .</span>
+        <span class="pi">-</span> <span class="s">pytest . -v</span>
+    <span class="pi">-</span> <span class="na">stage</span><span class="pi">:</span> <span class="s">deploy</span>
+      <span class="na">script</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="s">sam validate</span>
+        <span class="pi">-</span> <span class="s">sam build --debug</span>
+        <span class="pi">-</span> <span class="s">sam package --s3-bucket my-travis-deployment-bucket --output-template-file out.yml --region eu-west-1</span>
+        <span class="pi">-</span> <span class="s">sam deploy --template-file out.yml --stack-name example-stack-name --region eu-west-1 --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM</span>
+      <span class="na">skip_cleanup</span><span class="pi">:</span> <span class="no">true</span>
+      <span class="na">if</span><span class="pi">:</span> <span class="s">branch = master</span>
+<span class="na">notifications</span><span class="pi">:</span>
+  <span class="na">email</span><span class="pi">:</span>
+    <span class="na">on_failure</span><span class="pi">:</span> <span class="s">always</span>
+<span class="na">env</span><span class="pi">:</span>
+  <span class="na">global</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">AWS_DEFAULT_REGION=eu-west-1</span>
+  <span class="pi">-</span> <span class="na">secure</span><span class="pi">:</span> <span class="s">your-encrypted-aws-access-key-id</span>
+  <span class="pi">-</span> <span class="na">secure</span><span class="pi">:</span> <span class="s">your-encrypted-aws-secret-access-key</span>
+
+</code></pre></div></div><p>From now on every time you commit changes to your repository <code class="language-plaintext highlighter-rouge">master</code> branch, it will be immediately be deployed to AWS Lambda.</p><h2 id="conclusion">conclusion</h2><ol><li>We learned how to create a new user and policies in AWS IAM</li><li>We now have a basic application we can build upon</li><li>We learned about AWS API Gateway and AWS Lambda</li><li>We learned how <a href="https://github.com/erm/mangum">Mangum</a> works</li><li>We learned about AWS SAM and how to deploy an application from your machine</li><li>We learned how to use Travis for continuous deployment of the said application instead of doing it manually</li></ol><p>If you have any questions feel free to reach out to me in the <a href="https://github.com/iwpnd/FastAPI-aws-lambda-example">example repository</a> or via mail.</p><span class="meta"><time datetime="2020-01-21T11:37:00+00:00">January 21, 2020</time> &middot; <a href="/tag/python">python</a>, <a href="/tag/FastAPI">FastAPI</a>, <a href="/tag/aws">aws</a>, <a href="/tag/aws lambda">aws lambda</a>, <a href="/tag/aws sam">aws sam</a></span></section></main></body></html>

@@ -1,0 +1,245 @@
+[
+  
+    {
+
+      "title"    : "pyle38 - An async python client for Tile38",
+      "url"      : "/articles/2021-07/pyle38-tile38-python-client",
+      "category" : "database, go, tile38",
+      "tags"     : "tile38, database, geodata, pyle38, python, async",
+      "date"     : "2021-07-31 11:37:00 +0000",
+      "description" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "docker-compose in monorepos",
+      "url"      : "/articles/2021-05/docker-compose-in-monorepos",
+      "category" : "docker, docker-compose, monorepo",
+      "tags"     : "til, monorepo, docker, docker compose",
+      "date"     : "2021-05-05 11:37:00 +0000",
+      "description" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Tile38 in-memory geodatabase",
+      "url"      : "/articles/2021-04/Tile38-in-memory-geodatabase",
+      "category" : "database, go, tile38",
+      "tags"     : "tile38, database, geodata",
+      "date"     : "2021-04-24 11:37:00 +0000",
+      "description" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Typescript destructuring re-assignment",
+      "url"      : "/articles/2020-10/TIL-destructuring-reassignment-typescript",
+      "category" : "til, typescript",
+      "tags"     : "til, typescript",
+      "date"     : "2020-10-07 07:37:00 +0000",
+      "description" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Degree Precision vs. Length",
+      "url"      : "/articles/2020-09/TIL-degree-precision-vs-length",
+      "category" : "til, postgis",
+      "tags"     : "til, postgis",
+      "date"     : "2020-09-10 07:37:00 +0000",
+      "description" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Spatially cluster PostGIS tables",
+      "url"      : "/articles/2020-08/TIL-spatially-cluster-postgis-tables",
+      "category" : "til, postgis",
+      "tags"     : "til, postgis",
+      "date"     : "2020-08-05 07:37:00 +0000",
+      "description" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "How to import an sql dump into a database that is running in a container",
+      "url"      : "/articles/2020-07/TIL-howto-import-sqldump-into-docker-postgis",
+      "category" : "til, postgis",
+      "tags"     : "til, postgis",
+      "date"     : "2020-07-01 07:37:00 +0000",
+      "description" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Get unused indices of your PostGIS database",
+      "url"      : "/articles/2020-07/TIL-get-unused-indices-of-your-postgis",
+      "category" : "til, postgis",
+      "tags"     : "til, postgis",
+      "date"     : "2020-07-01 07:37:00 +0000",
+      "description" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Create a functional index in PostGIS",
+      "url"      : "/articles/2020-07/TIL-create-functional-index-in-postgis",
+      "category" : "til, postgis",
+      "tags"     : "til, postgis",
+      "date"     : "2020-07-01 07:37:00 +0000",
+      "description" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Docker Swarm on AWS EC2 Part 1&amp;#58; Initial provisioning and setup",
+      "url"      : "/articles/2020-05/part1-docker-swarm-on-ec2-initial-setup",
+      "category" : "docker, swarm, aws, ec2",
+      "tags"     : "docker, swarm, aws ec2",
+      "date"     : "2020-05-13 11:37:00 +0000",
+      "description" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "How to extract city mentions from slavic newspaper articles",
+      "url"      : "/articles/2020-04/toponym-flashtext-newspaper",
+      "category" : "python, nlp, flashgeotext",
+      "tags"     : "python, flashgeotext, toponym",
+      "date"     : "2020-04-29 11:37:00 +0000",
+      "description" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Apache Kafka producer and consumer with FastAPI and aiokafka",
+      "url"      : "/articles/2020-03/apache-kafka-fastapi-geostream",
+      "category" : "python, kafka, FastAPI",
+      "tags"     : "python, kafka, FastAPI",
+      "date"     : "2020-03-11 11:37:00 +0000",
+      "description" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Introducing flashgeotext&amp;#58; extract city and country names from text",
+      "url"      : "/articles/2020-02/flashgeotext-library",
+      "category" : "python, library",
+      "tags"     : "python, pytest, flashgeotext",
+      "date"     : "2020-02-25 08:13:37 +0000",
+      "description" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Stop killing kittens. Or, how to use pytest.fixtures to remove redundancy in your test suite",
+      "url"      : "/articles/2020-02/pytest-fixtures",
+      "category" : "python, pytest",
+      "tags"     : "python, pytest",
+      "date"     : "2020-02-20 08:13:37 +0000",
+      "description" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "use pytest.mark.parametrize to remove redundancy in your test suite",
+      "url"      : "/articles/2020-02/pytest-parametrize",
+      "category" : "python, pytest",
+      "tags"     : "python, pytest",
+      "date"     : "2020-02-12 08:13:37 +0000",
+      "description" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "rapidly build and deploy applications with streamlit and docker",
+      "url"      : "/articles/2020-02/streamlit-application-development-inside-docker",
+      "category" : "python, streamlit, docker",
+      "tags"     : "python, streamlit, docker",
+      "date"     : "2020-02-04 08:37:00 +0000",
+      "description" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Spellchecking with Grammarly in VSCode",
+      "url"      : "/articles/2020-01/grammarly-in-vscode",
+      "category" : "ide",
+      "tags"     : "python, vscode, markdown",
+      "date"     : "2020-01-28 11:37:00 +0000",
+      "description" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "How to continuously deploy a FastAPI to AWS Lambda with AWS SAM",
+      "url"      : "/articles/2020-01/deploy-fastapi-to-aws-lambda",
+      "category" : "python, FastAPI, aws",
+      "tags"     : "python, FastAPI, aws, aws lambda, aws sam",
+      "date"     : "2020-01-21 11:37:00 +0000",
+      "description" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Directory tree asci representation",
+      "url"      : "/articles/2020-01/directory-as-tree",
+      "category" : "homebrew, macos, documentation",
+      "tags"     : "homebrew, documentation",
+      "date"     : "2020-01-14 11:37:00 +0000",
+      "description" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "On FastAPI",
+      "url"      : "/articles/2020-01/opinion-on-fastapi",
+      "category" : "python, FastAPI",
+      "tags"     : "python, FastAPI",
+      "date"     : "2020-01-13 11:37:00 +0000",
+      "description" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "pre-commit to the rescue",
+      "url"      : "/articles/2020-01/pre-commit-to-the-rescue",
+      "category" : "python,, pre-commit",
+      "tags"     : "pre-commit, python, black, git hooks",
+      "date"     : "2020-01-10 11:37:00 +0000",
+      "description" : ""
+
+    } ,
+  
+    {
+
+      "title"    : "Black python code formatter",
+      "url"      : "/articles/2020-01/black-python-code-formatter",
+      "category" : "python",
+      "tags"     : "",
+      "date"     : "2020-01-02 11:37:00 +0000",
+      "description" : ""
+
+    } 
+  
+]

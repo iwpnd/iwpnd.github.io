@@ -7,13 +7,6 @@ title: imprint
 Information in accordance with Section 5 TMG
 
 Benjamin Ramser  
-Kelchstr. 9  
-12169 Berlin  
-
-### Contact Information
-Telephone: 030/7747890  
-E-Mail: ahoi@iwpnd.pw  
-Internet address: https://iwpnd.pw  
 
 ### Disclaimer
 Accountability for content
